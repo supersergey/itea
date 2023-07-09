@@ -1,13 +1,11 @@
-package com.example.demo.controller;
+package com.example.demo;
 
-import com.example.demo.controller.dto.User;
 import org.springframework.web.bind.annotation.*;
-
+import com.example.demo.User;
 import java.util.Random;
 
 @RestController
 public class UserController {
-
     private static final Random RND = new Random();
 
     @PostMapping("/api/users")
@@ -19,8 +17,6 @@ public class UserController {
     @GetMapping("/api/users/{id}")
     public User getUser(@PathVariable int id) {
         System.out.println(id);
-        return new User("Taras", "Kovalenko");
+        return new User("Taras", "Kovalenko", 30);
     }
-
-
 }
