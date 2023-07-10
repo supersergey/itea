@@ -1,26 +1,30 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.dto.User;
+import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Random;
 
 @RestController
 public class UserController {
 
-    private static final Random RND = new Random();
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/api/users")
-    public String createUser(@RequestBody User user) {
-        System.out.println(user);
-        return String.valueOf(RND.nextInt());
+    public int createUser(@RequestBody User user) {
+        return userService.save(user);
     }
 
     @GetMapping("/api/users/{id}")
     public User getUser(@PathVariable int id) {
-        System.out.println(id);
-        return new User("Taras", "Kovalenko");
+        return userService.findById(id);
     }
 
-
+    @GetMapping("/api/users/stats")
+    public int getStats() {
+        return userService.count();
+    }
 }
