@@ -4,6 +4,7 @@ import com.example.demo.controller.dto.User;
 
 public interface UserRepository {
     User findById(int id);
+    boolean existsById(int id);
 
     boolean existsByUserNameAndLastName(User user);
 
