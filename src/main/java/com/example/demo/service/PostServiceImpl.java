@@ -6,6 +6,8 @@ import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,24 +47,17 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getPostsByUserId(int userId, int limit, SortOrder sortOrder) {
         List<Post> posts = postRepository.getByUserId(userId);
-        List<Post> sortedPosts = switch (sortOrder) {
-            case ASC -> posts;
-            case DESC -> posts.stream().
-                    collect(Collectors.collectingAndThen(
-                            Collectors.toList(),
-                            list -> {
-                                Collections.reverse(list);
-                                return list;
-                            }
-                    ));
-        };
+        List<Post> result = new ArrayList<>(posts);
+        if (sortOrder == SortOrder.DESC) {
+            Collections.reverse(result);
+        }
 
         if (posts.size() > limit) {
-            return sortedPosts.stream()
+            return result.stream()
                     .limit(limit)
                     .toList();
         }
-        return sortedPosts;
+        return result;
     }
 
     @Override

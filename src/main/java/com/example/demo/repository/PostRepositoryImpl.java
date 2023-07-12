@@ -25,13 +25,9 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> getByUserId(int userId) {
-        List<Post> postsToReturn = new ArrayList<>();
-        for (Map.Entry<Integer, Post> post : posts.entrySet()) {
-            if (post.getValue().getUserId() == userId) {
-                postsToReturn.add(post.getValue());
-            }
-        }
-        return postsToReturn;
+        return posts.values().stream()
+                .filter(post -> post.getUserId() == userId)
+                .toList();
     }
 
     @Override
