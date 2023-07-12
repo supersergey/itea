@@ -22,6 +22,7 @@ public class UserRepositoryImpl implements UserRepository {
    {
        return users.get(id);
     }
+
     @Override
     public boolean existsByUserNameAndLastName(User user) {
         return users.entrySet().stream()
