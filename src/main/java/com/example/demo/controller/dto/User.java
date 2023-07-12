@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.controller.dto;
 
 public class User {
     private final String name;
