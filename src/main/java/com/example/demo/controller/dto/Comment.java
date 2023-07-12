@@ -1,17 +1,20 @@
-package com.example.demo;
+package com.example.demo.controller.dto;
 
 import java.util.Date;
 
-public class Comments {
+public class Comment {
     private final String author;
     private String body;
     private final Date date;
 
-    public Comments (String author, String body, Date date)
+    private  int id;
+
+    public Comment (String author, String body, Date date, int id)
     {
         this.author = author;
         this.body = body;
         this.date = date;
+        this.id = id;
     }
 
     public String getBody() {
@@ -26,6 +29,8 @@ public class Comments {
         return date;
     }
 
+    public  int getId() {return id;}
+
     public void setBody(String body)
     {
         this.body = body;
@@ -37,6 +42,7 @@ public class Comments {
                 "author='" + author + '\'' +
                 ", body='" + body + '\'' +
                 ", date='" + date + '\'' +
+                ", id='" + id + '\'' +
                 '}';
     }
 }
