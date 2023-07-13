@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.controller.dto.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,8 +27,8 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean existsByUserNameAndLastName(User user) {
         return users.entrySet().stream()
                 .anyMatch(u ->
-                        u.getValue().getName().equals(user.getName()) &&
-                        u.getValue().getLastName().equals(user.getLastName())
+                        u.getValue().name().equals(user.name()) &&
+                        u.getValue().lastName().equals(user.lastName())
         );
     }
 
@@ -41,5 +42,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public int count() {
         return users.size();
+    }
+
+    @Override
+    public Collection<User> findAll() {
+        return users.values();
     }
 }

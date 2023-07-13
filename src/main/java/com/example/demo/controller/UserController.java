@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.dto.User;
+import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ public class UserController {
     }
 
     @PostMapping("/api/users")
-    public int createUser(@RequestBody User user) {
+    public int createUser(@RequestBody User user) throws DuplicateUserException {
         return userService.save(user);
     }
 
