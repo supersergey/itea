@@ -23,8 +23,8 @@
             <tbody>
             <c:forEach items="${users}" var="user">
                 <tr>
-                    <td>${user.name}</td>
-                    <td>${user.lastName}</td>
+                    <td>${user.name()}</td>
+                    <td>${user.lastName()}</td>
                 </tr>
             </c:forEach>
             </tbody>
