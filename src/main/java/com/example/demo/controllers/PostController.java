@@ -1,71 +1,60 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dto.Comment;
 import com.example.demo.dto.Post;
-import com.example.demo.dto.SortOrder;
+import com.example.demo.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Random;
 
 @RestController
 public class PostController {
 
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
     @GetMapping("/api/users/{userId}/posts")
-    public List<Post> getPostsByUserId(
-            @PathVariable int userId,
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "DESC") SortOrder sort,
-            @RequestParam(defaultValue = "0") int age) {
-        System.out.println(age);
-        System.out.println(userId);
-        System.out.println(limit);
-        System.out.println(sort);
+    public List<Post> getPostsByUserId(@PathVariable int userId) {
+        List<Post> listOfPosts = null;
 
-        return List.of(
-                new Post("title1", "body1"),
-                new Post("title2", "body2")
-        );
+        try {
+            listOfPosts = postService.getPostsByUserId(userId);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return listOfPosts;
     }
 
-    @GetMapping("/api/posts/{postId}/comments")
-    public List<Comment> getCommentsByPostId(
-            @PathVariable int postId) {
+    @PostMapping("/api/users/{userId}/post")
+    public Post createPost(@RequestBody Post post, @PathVariable int userId) {
+        try {
+            int postId = postService.save(userId, post);
+            System.out.println("Post " + post.toString() + " was saved successfully with id " + postId);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
 
-        return List.of(
-                new Comment((int) (Math.random() * 1000), postId, "Comment 1 to post with id " + postId),
-                new Comment((int) (Math.random() * 1000), postId, "Comment 2 to post with id " + postId)
-        );
-
-    //2. Неправильний формат ID, наприклад `curl -X GET --location "http://localhost:8080/api/posts/1a2b3c/comments"`
-    //    {
-    //        "timestamp": "2023-07-09T12:59:50.613+00:00",
-    //            "status": 400,
-    //            "error": "Bad Request",
-    //            "path": "/api/posts/js124/comments"
-    //    }
-
-    }
-    @PostMapping("/api/comments")
-    public String addComment(@RequestBody Comment comment) {
-        System.out.println(comment);
-        return comment.toString();
+        return post;
     }
 
-    @PutMapping("/api/posts/{postId}/comments")
-    public String updateComment(@PathVariable int postId,
-                                @RequestBody Comment comment) {
-        comment.setPostId(postId);
-        System.out.println(comment);
-        return comment.toString();
+    @DeleteMapping("/api/users/{userId}/posts/delete/{postId}")
+    public void deletePostById(@PathVariable int userId, @PathVariable int postId) {
+        try {
+            postService.deleteById(userId, postId);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
-//  1. Неправильний URL, наприклад `curl -X PUT --location "http://localhost:8080/api/commentssss" \`
-//        {
-//            "timestamp": "2023-07-09T13:02:44.487+00:00",
-//                "status": 404,
-//                "error": "Not Found",
-//                "path": "/api/posts/124/commentssss"
-//        }
-
+    @PatchMapping("api/users/{userId}/posts/update/{postId}")
+    public void updatePostById(@PathVariable int userId, @PathVariable int postId, @RequestBody Post post) {
+        try {
+            postService.updatePost(userId, postId, post);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
