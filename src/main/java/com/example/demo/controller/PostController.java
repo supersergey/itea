@@ -26,7 +26,7 @@ public class PostController {
         return postService.update(id, post);
     }
 
-    @GetMapping("/users/{id}/posts")
+    @GetMapping("/api/users/{id}/posts")
     public List<Post> getPostsByUserId(
         @PathVariable int id,
         @RequestParam(defaultValue = "10") int limit,
