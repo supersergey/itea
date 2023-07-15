@@ -23,6 +23,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public boolean existsById(int id) {
+        return users.containsKey(id);
+    }
+
+    @Override
     public boolean existsByUserNameAndLastName(User user) {
         return users.entrySet().stream()
                 .anyMatch(u ->

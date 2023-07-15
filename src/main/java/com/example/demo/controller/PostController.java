@@ -2,28 +2,47 @@ package com.example.demo.controller;
 
 import com.example.demo.controller.dto.Post;
 import com.example.demo.controller.dto.SortOrder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.service.PostService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class PostController {
 
-    @GetMapping("/users/{userId}/posts")
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
+    @PostMapping("/api/users/{id}/posts")
+    public int createPost(@PathVariable int id, @RequestBody Post post) {
+        return postService.save(id, post);
+    }
+
+    @PutMapping("/api/posts/{id}")
+    public Post updatePost(@PathVariable int id, @RequestBody Post post) {
+        return postService.update(id, post);
+    }
+
+    @GetMapping("/users/{id}/posts")
     public List<Post> getPostsByUserId(
-        @PathVariable int userId,
+        @PathVariable int id,
         @RequestParam(defaultValue = "10") int limit,
         @RequestParam(defaultValue = "DESC") SortOrder sort) {
-            System.out.println(userId);
-            System.out.println(limit);
-            System.out.println(sort);
 
-        return List.of(
-                new Post("title1", "body1"),
-                new Post("title2", "body2")
-                );
+        return postService.getPostsByUserId(id, limit, sort);
     }
+
+    @DeleteMapping("/api/posts/{id}")
+    public void deletePost(@PathVariable int id) {
+        postService.delete(id);
+    }
+
+    @GetMapping("/api/users/{id}/posts/stats")
+    public int getNumberOfPostsByUserId(@PathVariable int id) {
+        return postService.countByUserId(id);
+    }
+
 }
