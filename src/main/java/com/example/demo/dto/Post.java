@@ -1,17 +1,39 @@
 package com.example.demo.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.Value;
-
-@Value
-@AllArgsConstructor
-@NoArgsConstructor(force = true)
-@ToString
 public class Post {
 
-    String title;
-    String body;
+    private String title;
+    private String body;
 
+    public Post() {
+    }
+
+    public Post(String title, String body) {
+        this.title = title;
+        this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", body='" + body + '\'' +
+                '}';
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
 }
