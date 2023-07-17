@@ -22,7 +22,7 @@ public class PostController {
         return postService.save(post);
     }
 
-    @GetMapping("/users/{userId}/posts")
+    @GetMapping("/{userId}/posts")
     public List<Post> getPostsUserId(@PathVariable int userId) throws UnknownUserException
     {
         return postService.getPostsByUserId(userId);
