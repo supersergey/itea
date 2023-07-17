@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.controller.dto.Comment;
-import com.example.demo.controller.dto.SortOder;
+import com.example.demo.controller.dto.SortOrder;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +14,7 @@ public class CommentController {
     @GetMapping("/api/posts/{postId}/comments")
     public List<Comment> getComments(@PathVariable int postId,
                                       @RequestParam(defaultValue = "10") int limit,
-                                      @RequestParam(defaultValue = "DESC") SortOder sort)
+                                      @RequestParam(defaultValue = "DESC") SortOrder sort)
     {
         System.out.println(postId);
         System.out.println(limit);
