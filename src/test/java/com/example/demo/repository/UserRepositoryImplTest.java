@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.controller.dto.User;
 import org.junit.jupiter.api.Test;
 
 class UserRepositoryImplTest {

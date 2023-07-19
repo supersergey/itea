@@ -1,6 +1,6 @@
 package com.example.demo.repository;
 
-import com.example.demo.controller.dto.User;
+import com.example.demo.dto.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -27,9 +27,9 @@ public class UserRepositoryImpl implements UserRepository {
     public boolean existsByUserNameAndLastName(User user) {
         return users.entrySet().stream()
                 .anyMatch(u ->
-                        u.getValue().name().equals(user.name()) &&
-                        u.getValue().lastName().equals(user.lastName())
-        );
+                        u.getValue().getName().equals(user.getName()) &&
+                                u.getValue().getLastName().equals(user.getLastName())
+                );
     }
 
     @Override
@@ -47,5 +47,16 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Collection<User> findAll() {
         return users.values();
+    }
+
+    @Override
+    public void delete(int userId) {
+        users.remove(userId);
+    }
+
+    @Override
+    public void update(int userId, User user) {
+        users.remove(userId);
+        users.put(userId, user);
     }
 }

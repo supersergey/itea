@@ -1,29 +1,60 @@
 package com.example.demo.controller;
 
-import com.example.demo.controller.dto.Post;
-import com.example.demo.controller.dto.SortOrder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.dto.Post;
+import com.example.demo.service.PostService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class PostController {
 
-    @GetMapping("/users/{userId}/posts")
-    public List<Post> getPostsByUserId(
-        @PathVariable int userId,
-        @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(defaultValue = "DESC") SortOrder sort) {
-            System.out.println(userId);
-            System.out.println(limit);
-            System.out.println(sort);
+    private final PostService postService;
 
-        return List.of(
-                new Post("title1", "body1"),
-                new Post("title2", "body2")
-                );
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
+
+    @GetMapping("/api/users/{userId}/posts")
+    public List<Post> getPostsByUserId(@PathVariable int userId) {
+        List<Post> listOfPosts = null;
+
+        try {
+            listOfPosts = postService.getPostsByUserId(userId);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return listOfPosts;
+    }
+
+    @PostMapping("/api/users/{userId}/post")
+    public Post createPost(@RequestBody Post post, @PathVariable int userId) {
+        try {
+            int postId = postService.save(userId, post);
+            System.out.println("Post " + post.toString() + " was saved successfully with id " + postId);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return post;
+    }
+
+    @DeleteMapping("/api/users/{userId}/posts/delete/{postId}")
+    public void deletePostById(@PathVariable int userId, @PathVariable int postId) {
+        try {
+            postService.deleteById(userId, postId);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @PatchMapping("api/users/{userId}/posts/update/{postId}")
+    public void updatePostById(@PathVariable int userId, @PathVariable int postId, @RequestBody Post post) {
+        try {
+            postService.updatePost(userId, postId, post);
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

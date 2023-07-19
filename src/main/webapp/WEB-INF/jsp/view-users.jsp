@@ -25,6 +25,8 @@
                 <tr>
                     <td>${user.name}</td>
                     <td>${user.lastName}</td>
+                    <td><button type="button" class="btn btn-primary mb-1">Add post</button></td>
+                    <td><button type="button" class="btn btn-primary mb-1">View posts</button></td>
                 </tr>
             </c:forEach>
             </tbody>

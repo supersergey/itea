@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.controller.dto.User;
+import com.example.demo.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Controller;
