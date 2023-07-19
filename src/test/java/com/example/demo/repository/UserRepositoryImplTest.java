@@ -1,26 +1,49 @@
 package com.example.demo.repository;
 
-import com.example.demo.controller.dto.User;
+import com.example.demo.repository.model.User;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest
 class UserRepositoryImplTest {
 
-    private final UserRepository repository = new UserRepositoryImpl();
+    @Autowired
+    @Qualifier("springDataUserRepository")
+    private UserRepository repository;
 
     @Test
-    void shouldReturnAUserById() {
-        var user = new User("John", "Smith");
-
-        var userId = repository.save(user);
-
-        var actual = repository.findById(userId);
-        assert user.equals(actual); // Exception виникне, якщо умова = false
+    void shouldReturnUserById() {
+        var actual = repository.findById(2);
+        assertThat(actual.getFirstName()).isEqualTo("George");
+        assertThat(actual.getLastName()).isEqualTo("Bush");
     }
 
     @Test
-    void shouldReturnNullIfUserNotFound() {
+    void shouldReturnNullForInvalidUserId() {
         var actual = repository.findById(-1);
+        assertThat(actual).isNull();
+    }
 
-        assert actual == null; // Exception виникне, якщо умова = false
+    @Test
+    void shouldSaveANewUser() {
+        var actual = repository.save(new User(null, "Bobie", "Dylan"));
+        assertThat(actual).isNotNull();
+        assertThat(actual.getId()).isNotEqualTo(0);
+    }
+
+    @Test
+    void shouldFindAUserByFirstAndLastName() {
+        var actual = repository.existsByFirstNameAndLastName("Joe", "Biden");
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    void shouldNotFindAUserByWrongFirstAndLastName() {
+        var actual = repository.existsByFirstNameAndLastName("ababa", "ajahj");
+        assertThat(actual).isFalse();
     }
 }

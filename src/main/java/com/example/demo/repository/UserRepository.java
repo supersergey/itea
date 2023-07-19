@@ -1,15 +1,20 @@
 package com.example.demo.repository;
 
-import com.example.demo.controller.dto.User;
+import com.example.demo.repository.model.User;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.Repository;
 
 import java.util.Collection;
 
-public interface UserRepository {
+@Qualifier("springDataUserRepository")
+public interface UserRepository extends Repository<User, Integer> {
+
     User findById(int id);
 
-    boolean existsByUserNameAndLastName(User user);
+    boolean existsByFirstNameAndLastName(String firstName, String lastName);
 
-    int save(User user);
+    User save(User user);
+
     int count();
 
     Collection<User> findAll();
