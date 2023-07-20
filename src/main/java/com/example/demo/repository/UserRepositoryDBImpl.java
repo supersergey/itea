@@ -25,7 +25,7 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-//    @Override
+    @Override
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
@@ -47,6 +47,11 @@ public class UserRepositoryDBImpl implements UserRepository {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    @Override
+    public boolean existsById(int id) {
+        return false;
     }
 
     @Override
