@@ -46,7 +46,7 @@ public class PostWebController {
         try {
             if (body.containsKey("postTitle") && body.containsKey("postBody")) {
                 try {
-                    postService.save(id, new Post(body.get("postTitle"), body.get("postBody"), id));
+                    postService.save(id, new Post(body.get("postTitle"), body.get("postBody")));
                 } catch (BlankStringException e) {
                     model.addAttribute("emptyFieldsErrorMessage", "Fields for the post message must not be empty");
                 }

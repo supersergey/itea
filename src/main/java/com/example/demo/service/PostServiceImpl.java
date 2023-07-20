@@ -35,7 +35,6 @@ public class PostServiceImpl implements PostService {
             throw new BlankStringException("Fields are empty");
         }
 
-        post.setUserId(userId);
         return postRepository.save(post);
     }
 

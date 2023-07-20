@@ -3,13 +3,13 @@ package com.example.demo.repository;
 import com.example.demo.controller.dto.Post;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class PostRepositoryImpl implements PostRepository {
+public class PostRepositoryInMemoryImpl implements PostRepository {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
     private int counter;
@@ -25,9 +25,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> getByUserId(int userId) {
-        return posts.values().stream()
-                .filter(post -> post.getUserId() == userId)
-                .toList();
+        return Collections.emptyList();
     }
 
     @Override
