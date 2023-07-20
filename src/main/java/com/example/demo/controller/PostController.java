@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.controller.dto.Post;
 import com.example.demo.controller.dto.SortOrder;
+import com.example.demo.exception.BlankStringException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +19,7 @@ public class PostController {
     }
 
     @PostMapping("/api/users/{id}/posts")
-    public int createPost(@PathVariable int id, @RequestBody Post post) {
+    public int createPost(@PathVariable int id, @RequestBody Post post) throws UserNotFoundException, BlankStringException {
         return postService.save(id, post);
     }
 
@@ -30,7 +32,7 @@ public class PostController {
     public List<Post> getPostsByUserId(
         @PathVariable int id,
         @RequestParam(defaultValue = "10") int limit,
-        @RequestParam(defaultValue = "DESC") SortOrder sort) {
+        @RequestParam(defaultValue = "DESC") SortOrder sort) throws UserNotFoundException {
 
         return postService.getPostsByUserId(id, limit, sort);
     }
@@ -41,7 +43,7 @@ public class PostController {
     }
 
     @GetMapping("/api/users/{id}/posts/stats")
-    public int getNumberOfPostsByUserId(@PathVariable int id) {
+    public int getNumberOfPostsByUserId(@PathVariable int id) throws UserNotFoundException {
         return postService.countByUserId(id);
     }
 
