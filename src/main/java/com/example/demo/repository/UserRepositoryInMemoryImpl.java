@@ -1,14 +1,12 @@
 package com.example.demo.repository;
 
-import com.example.demo.dto.User;
-import org.springframework.stereotype.Repository;
+import com.example.demo.repository.model.User;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryInMemoryImpl implements UserRepository {
 
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
 
@@ -24,19 +22,19 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean existsByUserNameAndLastName(User user) {
+    public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return users.entrySet().stream()
                 .anyMatch(u ->
-                        u.getValue().getName().equals(user.getName()) &&
-                                u.getValue().getLastName().equals(user.getLastName())
-                );
+                        u.getValue().getLastName().equals(lastName) &&
+                        u.getValue().getFirstName().equals(firstName)
+        );
     }
 
     @Override
-    public int save(User user) {
+    public User save(User user) {
         int id = nextId();
         users.put(id, user);
-        return id;
+        return user;
     }
 
     @Override
@@ -49,10 +47,6 @@ public class UserRepositoryImpl implements UserRepository {
         return users.values();
     }
 
-    @Override
-    public void delete(int userId) {
-        users.remove(userId);
-    }
 
     @Override
     public void update(int userId, User user) {

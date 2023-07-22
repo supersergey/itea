@@ -1,44 +1,29 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.User;
+import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final Converter<User, com.example.demo.repository.model.User> converter;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, Converter<User, com.example.demo.repository.model.User> converter) {
         this.userRepository = userRepository;
+        this.converter = converter;
     }
 
     public int save(User user) throws DuplicateUserException {
-        if (userRepository.existsByUserNameAndLastName(user)) {
+        if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
             throw new DuplicateUserException(user);
         }
-        return userRepository.save(user);
-    }
-
-    public void delete(int userId) {
-        if (userRepository.findById(userId) == null) {
-            throw new IllegalArgumentException("Can't delete user with id " + userId
-                    + ". Such user doesn't exists.");
-        }
-
-        userRepository.delete(userId);
-    }
-
-    public void update(int userId, User user) {
-        if (userRepository.findById(userId) == null) {
-            throw new IllegalArgumentException("Can't update user with id " + userId
-                    + ". Such user doesn't exists.");
-        }
-
-        userRepository.update(userId, user);
+        return userRepository.save(converter.toEntity(user)).getId();
     }
 
     public int count() {
@@ -46,15 +31,10 @@ public class UserService {
     }
 
     public User findById(int id) {
-        if (userRepository.findById(id) == null) {
-            throw new IllegalArgumentException("Can't find user with id " + id
-                    + ". Such user doesn't exists.");
-        }
-
-        return userRepository.findById(id);
+        return converter.toDto(userRepository.findById(id));
     }
 
     public Collection<User> findAll() {
-        return userRepository.findAll();
+        return Collections.emptyList();
     }
 }
