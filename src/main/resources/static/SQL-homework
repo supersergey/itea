@@ -1,0 +1,56 @@
+create table "user"
+(
+    id         integer      not null
+        constraint user_id_pk
+            primary key,
+    first_name varchar(512) not null,
+    last_name  varchar(512) not null,
+    age        integer      not null
+);
+
+create table post
+(
+    id      serial
+        constraint post_pk
+            primary key,
+    title   varchar(512) not null,
+    body    text         not null,
+    user_id integer      not null
+        constraint post_user_id_fk
+            references public."user"
+);
+
+insert into "user"
+values 
+        (3,'Adam','Smith',20),
+        (2,'George','Bush',70),
+        (5,'Bob','Silent',14)
+
+insert into post
+values 
+        (3,'ABC','XYZ',2),
+        (2,'Мій другий пост','Всім ще більше вітань!',4),
+        (1,'Мій перший пост','Всім привіт',3),
+        (4,'Новий пост','Тіло нового поста',3),
+        (5,'Новий пост','Тіло нового поста',3)
+
+select * from "user";
+
+select * from post;
+
+select sum(age) from "user";
+
+insert into "user"
+values (6, 'Bob', 'Marley', 30);
+
+update "user"
+set age = 30 where first_name = 'Bob';
+
+delete from "user" where first_name like '%m';
+
+insert into post(id, title, body, user_id)
+values(7, 'Новий пост', 'Тіло нового поста', 2);
+
+select * from post p
+right join "user" u on u.id = p.user_id
+where p.user_id is null;
