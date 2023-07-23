@@ -24,7 +24,7 @@ class PostRepositoryTest {
         var actual = postRepository.findById(2).get();
         assertEquals("Мій другий пост", actual.getTitle());
         assertEquals("Всім ще більше вітань!", actual.getBody());
-        assertEquals(2, actual.getUserId());
+        assertEquals(4, actual.getUserId());
     }
 
     @Test
