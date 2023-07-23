@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class PostRepositoryInMemoryImpl {
+public class PostRepositoryInMemoryImpl implements PostRepository {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
     private int counter;
