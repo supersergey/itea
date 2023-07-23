@@ -1,15 +1,27 @@
 package com.example.demo.repository;
 
 import com.example.demo.controller.dto.Post;
+import com.example.demo.repository.model.PostEntity;
+import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface PostRepository {
-    int save(Post post);
-    List<Post> getByUserId(int userId);
-    void delete(int postId);
+public interface PostRepository extends CrudRepository<PostEntity, Integer> {
+    List<PostEntity> findByUserId(int userId);
     int countByUserId(int userId);
-    boolean existsById(int postId);
-    Post getById(int postId);
+
+    @Query("""
+    select user_id
+                 from (select user_id, count(user_id) as num_of_posts
+                       from post
+                       group by user_id) as num_of_user_posts
+                 where num_of_posts =
+                       (select max(amount_of_posts)
+                        from (select user_id, count(user_id) as amount_of_posts
+                              from post
+                              group by user_id) as amount_of_user_posts)
+    """)
+    List<Integer> findUsersIdsWithTheBiggestNumberOfPosts();
 
 }

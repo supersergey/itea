@@ -6,6 +6,7 @@ import com.example.demo.exception.BlankStringException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.model.PostEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostConverter postConverter;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostConverter postConverter) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.postConverter = postConverter;
     }
 
     @Override
@@ -35,7 +38,10 @@ public class PostServiceImpl implements PostService {
             throw new BlankStringException("Fields are empty");
         }
 
-        return postRepository.save(post);
+        PostEntity postEntity = postConverter.toEntity(post);
+        postEntity.setUserId(userId);
+
+        return postRepository.save(postEntity).getId();
     }
 
     @Override
@@ -43,11 +49,12 @@ public class PostServiceImpl implements PostService {
         if (!postRepository.existsById(postId)) {
             throw new IllegalArgumentException("Post does not exists");
         }
-        Post post = postRepository.getById(postId);
-        post.setTitle(changedPost.getTitle());
-        post.setBody(changedPost.getBody());
+        PostEntity postEntity = postRepository.findById(postId).get();
+        postEntity.setTitle(changedPost.getTitle());
+        postEntity.setBody(changedPost.getBody());
+        PostEntity savedPostEntity = postRepository.save(postEntity);
 
-        return post;
+        return postConverter.toDto(savedPostEntity);
     }
 
     @Override
@@ -55,18 +62,21 @@ public class PostServiceImpl implements PostService {
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
         }
-        List<Post> posts = postRepository.getByUserId(userId);
-        List<Post> result = new ArrayList<>(posts);
+        List<PostEntity> postEntities = postRepository.findByUserId(userId);
+        List<Post> posts = postEntities.stream()
+                .map(postConverter::toDto)
+                .toList();
+
         if (sortOrder == SortOrder.DESC) {
-            Collections.reverse(result);
+            Collections.reverse(posts);
         }
 
         if (posts.size() > limit) {
-            return result.stream()
+            return posts.stream()
                     .limit(limit)
                     .toList();
         }
-        return result;
+        return posts;
     }
 
     @Override
@@ -74,7 +84,10 @@ public class PostServiceImpl implements PostService {
         if (!postRepository.existsById(postId)) {
             throw new IllegalArgumentException("Post does not exists");
         }
-        postRepository.delete(postId);
+
+        PostEntity postEntity = postRepository.findById(postId).get();
+
+        postRepository.delete(postEntity);
     }
 
     @Override

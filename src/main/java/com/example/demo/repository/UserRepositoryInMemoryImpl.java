@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.repository.model.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -50,5 +51,10 @@ public class UserRepositoryInMemoryImpl implements UserRepository {
     @Override
     public Collection<User> findAll() {
         return users.values();
+    }
+
+    @Override
+    public List<String> findUsersLastNamesWithTheBiggestNumberOfPosts() {
+        return null;
     }
 }

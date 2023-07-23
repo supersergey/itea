@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -47,5 +49,13 @@ class UserRepositoryTest {
     void shouldNotFindAUserByWrongFirstAndLastName() {
         var actual = repository.existsByFirstNameAndLastName("ababa", "ajahj");
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void shouldReturnUsersLastNamesWithTheBiggestNumberOfPosts() {
+        var actual = repository.findUsersLastNamesWithTheBiggestNumberOfPosts();
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.size()).isEqualTo(1);
+        assertThat(actual).isEqualTo(List.of("Smith"));
     }
 }
