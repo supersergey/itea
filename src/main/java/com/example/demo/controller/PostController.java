@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.exception.UnknownPostException;
-import com.example.demo.exception.UnknownUserException;
-import com.example.demo.service.PostService;
+import com.example.demo.services.PostService;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.controller.dto.Post;
 
@@ -17,25 +15,25 @@ public class PostController {
     }
 
     @PostMapping ("/api/posts/new")
-    public int createPost(@RequestBody Post post) throws UnknownUserException
+    public int createPost(@RequestBody Post post)
     {
         return postService.save(post);
     }
 
-    @GetMapping("/{userId}/posts")
-    public List<Post> getPostsUserId(@PathVariable int userId) throws UnknownUserException
+    @GetMapping("/users/{userId}/posts")
+    public List<Post> getPostsUserId(@PathVariable int userId)
     {
         return postService.getPostsByUserId(userId);
     }
 
     @DeleteMapping("/api/posts/delete/{id}")
-    public void deletePost(@PathVariable int id) throws UnknownPostException
+    public void deletePost(@PathVariable int id)
     {
         postService.delete(id);
     }
 
     @PutMapping ("/api/posts/edit/{id}")
-    public int editPost(@RequestBody Post post, @PathVariable int id) throws UnknownPostException
+    public int editPost(@RequestBody Post post, @PathVariable int id)
     {
         return postService.edit(id, post);
     }
