@@ -47,6 +47,11 @@
                     <input type="text" class="form-control" id="userLastNameInput" name="lastName"
                            placeholder="Smith">
                 </div>
+                <div class="mb-3">
+                    <label for="userAgeInput" class="form-label">Age</label>
+                    <input type="text" class="form-control" id="userAgeInput" name="age"
+                           placeholder="15">
+                </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-3">Submit</button>
                 </div>

@@ -1,9 +1,8 @@
 package com.example.demo.repository;
 
-import com.example.demo.repository.model.User;
+import com.example.demo.repository.model.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryTest {
 
     @Autowired
-    @Qualifier("springDataUserRepository")
     private UserRepository repository;
 
     @Test
     void shouldReturnUserById() {
-        var actual = repository.findById(2);
+        var actual = repository.findById(2).get();
         assertThat(actual.getFirstName()).isEqualTo("George");
         assertThat(actual.getLastName()).isEqualTo("Bush");
     }
@@ -27,12 +25,12 @@ class UserRepositoryTest {
     @Test
     void shouldReturnNullForInvalidUserId() {
         var actual = repository.findById(-1);
-        assertThat(actual).isNull();
+        assertThat(actual).isEmpty();
     }
 
     @Test
     void shouldSaveANewUser() {
-        var actual = repository.save(new User(null, "Bobie", "Dylan"));
+        var actual = repository.save(new UserEntity(null, "Bobie", "Dylan", 30));
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isNotEqualTo(0);
     }
@@ -47,5 +45,11 @@ class UserRepositoryTest {
     void shouldNotFindAUserByWrongFirstAndLastName() {
         var actual = repository.existsByFirstNameAndLastName("ababa", "ajahj");
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    void shouldCountAllUsersInUserTable() {
+        long actual = repository.count();
+        assertThat(actual).isEqualTo(4);
     }
 }

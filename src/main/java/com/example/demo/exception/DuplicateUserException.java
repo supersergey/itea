@@ -1,6 +1,6 @@
 package com.example.demo.exception;
 
-import com.example.demo.dto.User;
+import com.example.demo.controller.dto.User;
 
 public class DuplicateUserException extends Exception {
     public DuplicateUserException(User user) {

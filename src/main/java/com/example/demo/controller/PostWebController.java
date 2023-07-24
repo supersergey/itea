@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.Post;
+import com.example.demo.controller.dto.Post;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Controller;

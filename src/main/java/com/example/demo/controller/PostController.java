@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.Post;
+import com.example.demo.controller.dto.Post;
 import com.example.demo.service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +43,7 @@ public class PostController {
     @DeleteMapping("/api/users/{userId}/posts/delete/{postId}")
     public void deletePostById(@PathVariable int userId, @PathVariable int postId) {
         try {
-            postService.deleteById(userId, postId);
+            postService.deleteById(postId);
         } catch (IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
         }
@@ -52,7 +52,7 @@ public class PostController {
     @PatchMapping("api/users/{userId}/posts/update/{postId}")
     public void updatePostById(@PathVariable int userId, @PathVariable int postId, @RequestBody Post post) {
         try {
-            postService.updatePost(userId, postId, post);
+            postService.updatePost(postId, post);
         } catch (IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
         }

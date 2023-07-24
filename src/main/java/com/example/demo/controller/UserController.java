@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.User;
+import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +51,7 @@ public class UserController {
     @DeleteMapping("/api/users/delete/{userId}")
     public void deletePostById(@PathVariable int userId) {
         try {
-            userService.delete(userId);
+            userService.deleteById(userId);
         } catch (IllegalArgumentException ex) {
             System.out.println(ex.getMessage());
         }
