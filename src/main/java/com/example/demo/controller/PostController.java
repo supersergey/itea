@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.controller.dto.Post;
 import com.example.demo.controller.dto.SortOrder;
 import com.example.demo.exception.BlankStringException;
+import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.service.PostService;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class PostController {
     }
 
     @PutMapping("/api/posts/{id}")
-    public Post updatePost(@PathVariable int id, @RequestBody Post post) {
+    public Post updatePost(@PathVariable int id, @RequestBody Post post) throws PostNotFoundException {
         return postService.update(id, post);
     }
 
@@ -38,7 +39,7 @@ public class PostController {
     }
 
     @DeleteMapping("/api/posts/{id}")
-    public void deletePost(@PathVariable int id) {
+    public void deletePost(@PathVariable int id) throws PostNotFoundException {
         postService.delete(id);
     }
 

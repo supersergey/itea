@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.controller.dto.Post;
 import com.example.demo.controller.dto.SortOrder;
 import com.example.demo.exception.BlankStringException;
+import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
@@ -45,11 +46,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post update(int postId, Post changedPost) {
-        if (!postRepository.existsById(postId)) {
-            throw new IllegalArgumentException("Post does not exists");
-        }
-        PostEntity postEntity = postRepository.findById(postId).get();
+    public Post update(int postId, Post changedPost) throws PostNotFoundException {
+        PostEntity postEntity = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId));
         postEntity.setTitle(changedPost.getTitle());
         postEntity.setBody(changedPost.getBody());
         PostEntity savedPostEntity = postRepository.save(postEntity);
@@ -65,7 +65,7 @@ public class PostServiceImpl implements PostService {
         List<PostEntity> postEntities = postRepository.findByUserId(userId);
         List<Post> posts = postEntities.stream()
                 .map(postConverter::toDto)
-                .toList();
+                .collect(Collectors.toList());
 
         if (sortOrder == SortOrder.DESC) {
             Collections.reverse(posts);
@@ -80,13 +80,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void delete(int postId) {
-        if (!postRepository.existsById(postId)) {
-            throw new IllegalArgumentException("Post does not exists");
-        }
-
-        PostEntity postEntity = postRepository.findById(postId).get();
-
+    public void delete(int postId) throws PostNotFoundException {
+        PostEntity postEntity = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId));
         postRepository.delete(postEntity);
     }
 
