@@ -25,6 +25,8 @@
                 <tr>
                     <td>${user.name}</td>
                     <td>${user.lastName}</td>
+                    <td><button type="button" class="btn btn-primary mb-1">Add post</button></td>
+                    <td><button type="button" class="btn btn-primary mb-1">View posts</button></td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -44,6 +46,11 @@
                     <label for="userLastNameInput" class="form-label">Last name</label>
                     <input type="text" class="form-control" id="userLastNameInput" name="lastName"
                            placeholder="Smith">
+                </div>
+                <div class="mb-3">
+                    <label for="userAgeInput" class="form-label">Age</label>
+                    <input type="text" class="form-control" id="userAgeInput" name="age"
+                           placeholder="15">
                 </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary mb-3">Submit</button>

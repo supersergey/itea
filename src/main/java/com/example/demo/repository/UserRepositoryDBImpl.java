@@ -1,13 +1,17 @@
 package com.example.demo.repository;
 
-import com.example.demo.repository.model.User;
+import com.example.demo.repository.model.UserEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullApi;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
-public class UserRepositoryDBImpl implements UserRepository {
+public class UserRepositoryDBImpl  {
 
     private final Connection connection;
 
@@ -23,73 +27,5 @@ public class UserRepositoryDBImpl implements UserRepository {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-//    @Override
-    public User findById(int id) {
-        String query = String.format("""
-                        select * from "user"
-                        where id = %d  
-                    """, id);
-        try(
-                Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(query)
-        ) {
-            if (resultSet.next()) {
-                return new User(
-                        id,
-                        resultSet.getString("first_name"),
-                        resultSet.getString("last_name")
-                );
-            } else {
-                return null;
-            }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
-        return false;
-    }
-
-    @Override
-    public User save(User user) {
-        try (Statement statement = connection.createStatement()) {
-            String query = String.format("""
-                    insert into "user" (first_name, last_name)
-                    values ('%s', '%s')
-                    """,
-                    user.getFirstName(), user.getLastName()
-            );
-            var updatedCount = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-            if (updatedCount != 1) {
-                throw new RuntimeException("User table update failed");
-            } else {
-                ResultSet generated = statement.getGeneratedKeys();
-                if (generated.next()) {
-                    return new User(
-                            generated.getInt("id"),
-                            user.getFirstName(),
-                            user.getLastName()
-                    );
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public int count() {
-        return 0;
-    }
-
-    @Override
-    public Collection<User> findAll() {
-        return null;
     }
 }

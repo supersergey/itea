@@ -1,17 +1,19 @@
 package com.example.demo.service;
 
 import com.example.demo.controller.dto.User;
+import com.example.demo.repository.model.Convertors.Convertor;
+import com.example.demo.repository.model.UserEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserConverter implements Converter<User, com.example.demo.repository.model.User> {
+public class UserConverter implements Convertor<User, UserEntity> {
     @Override
-    public User toDto(com.example.demo.repository.model.User model) {
-        return new User(model.getFirstName(), model.getLastName());
+    public User toDto(UserEntity model) {
+        return new User(model.getFirstName(), model.getLastName(), model.getAge());
     }
 
     @Override
-    public com.example.demo.repository.model.User toEntity(User user) {
-        return new com.example.demo.repository.model.User(null, user.name(), user.lastName());
+    public UserEntity toEntity(User user) {
+        return new UserEntity(null, user.getName(), user.getLastName(), user.getAge());
     }
 }

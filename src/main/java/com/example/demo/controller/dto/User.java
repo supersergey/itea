@@ -1,3 +1,15 @@
 package com.example.demo.controller.dto;
 
-public record User(String name, String lastName) { }
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Value;
+
+@Value
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+public class User {
+
+    String name;
+    String lastName;
+    int age;
+}
