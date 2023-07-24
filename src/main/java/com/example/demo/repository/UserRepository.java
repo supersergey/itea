@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import java.util.Collection;

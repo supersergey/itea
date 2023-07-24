@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.UserRepository;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -14,9 +15,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final Converter<User, com.example.demo.repository.model.User> converter;
 
-    public UserService(UserRepository userRepository, Converter<User, com.example.demo.repository.model.User> converter) {
+    private final EntityManagerFactory entityManagerFactory;
+
+    public UserService(UserRepository userRepository, Converter<User, com.example.demo.repository.model.User> converter, EntityManagerFactory entityManagerFactory) {
         this.userRepository = userRepository;
         this.converter = converter;
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public int save(User user) throws DuplicateUserException {
