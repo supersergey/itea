@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+
 @Slf4j
-public class UserRepositoryDBImpl implements UserRepository {
+public class UserRepositoryDBImpl {
 
     private final Connection connection;
 
@@ -31,7 +32,7 @@ public class UserRepositoryDBImpl implements UserRepository {
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
-                        where id = %d  
+                        where id = %d
                     """, id);
         try(
                 Statement statement = connection.createStatement();
@@ -41,7 +42,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                 return new User(
                         id,
                         resultSet.getString("first_name"),
-                        resultSet.getString("last_name")
+                        resultSet.getString("last_name"),
+                        Collections.emptyList()
                 );
             } else {
                 return null;
@@ -50,7 +52,6 @@ public class UserRepositoryDBImpl implements UserRepository {
             throw new RuntimeException(ex);
         }
     }
-
 
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return false;
@@ -73,7 +74,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                     return new User(
                             generated.getInt("id"),
                             user.getFirstName(),
-                            user.getLastName()
+                            user.getLastName(),
+                            Collections.emptyList()
                     );
                 } else {
                     return null;
@@ -83,7 +85,6 @@ public class UserRepositoryDBImpl implements UserRepository {
             throw new RuntimeException(ex);
         }
     }
-
 
     public int count()
     {
@@ -97,6 +98,7 @@ public class UserRepositoryDBImpl implements UserRepository {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
+
     }
 
     public Collection<User> findAll() {

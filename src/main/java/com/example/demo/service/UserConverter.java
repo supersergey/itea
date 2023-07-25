@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.controller.dto.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 public class UserConverter implements Converter<User, com.example.demo.repository.model.User> {
     @Override
@@ -13,5 +15,6 @@ public class UserConverter implements Converter<User, com.example.demo.repositor
     @Override
     public com.example.demo.repository.model.User toEntity(User user) {
         return new com.example.demo.repository.model.User(null, user.getName(), user.getLastName());
+
     }
 }
