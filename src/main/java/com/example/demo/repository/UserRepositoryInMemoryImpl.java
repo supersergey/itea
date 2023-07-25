@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class UserRepositoryInMemoryImpl implements UserRepository {
+public class UserRepositoryInMemoryImpl {
 
     private final Map<Integer, User> users = new ConcurrentHashMap<>();
 
@@ -16,12 +16,10 @@ public class UserRepositoryInMemoryImpl implements UserRepository {
         return counter++;
     }
 
-    @Override
     public User findById(int id) {
         return users.get(id);
     }
 
-    @Override
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return users.entrySet().stream()
                 .anyMatch(u ->
@@ -30,19 +28,16 @@ public class UserRepositoryInMemoryImpl implements UserRepository {
         );
     }
 
-    @Override
     public User save(User user) {
         int id = nextId();
         users.put(id, user);
         return user;
     }
 
-    @Override
     public int count() {
         return users.size();
     }
 
-    @Override
     public Collection<User> findAll() {
         return users.values();
     }

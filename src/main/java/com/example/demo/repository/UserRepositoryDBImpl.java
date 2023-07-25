@@ -5,9 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.Collection;
+import java.util.Collections;
 
 @Slf4j
-public class UserRepositoryDBImpl implements UserRepository {
+public class UserRepositoryDBImpl {
 
     private final Connection connection;
 
@@ -25,11 +26,10 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-//    @Override
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
-                        where id = %d  
+                        where id = %d
                     """, id);
         try(
                 Statement statement = connection.createStatement();
@@ -39,7 +39,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                 return new User(
                         id,
                         resultSet.getString("first_name"),
-                        resultSet.getString("last_name")
+                        resultSet.getString("last_name"),
+                        Collections.emptyList()
                 );
             } else {
                 return null;
@@ -49,12 +50,10 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return false;
     }
 
-    @Override
     public User save(User user) {
         try (Statement statement = connection.createStatement()) {
             String query = String.format("""
@@ -72,7 +71,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                     return new User(
                             generated.getInt("id"),
                             user.getFirstName(),
-                            user.getLastName()
+                            user.getLastName(),
+                            Collections.emptyList()
                     );
                 } else {
                     return null;
@@ -83,12 +83,10 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
     public int count() {
         return 0;
     }
 
-    @Override
     public Collection<User> findAll() {
         return null;
     }
