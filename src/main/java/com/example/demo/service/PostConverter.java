@@ -4,6 +4,8 @@ import com.example.demo.controller.dto.Post;
 import com.example.demo.repository.model.PostEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 public class PostConverter implements Converter<Post, PostEntity> {
     @Override
@@ -13,6 +15,6 @@ public class PostConverter implements Converter<Post, PostEntity> {
 
     @Override
     public PostEntity toEntity(Post post) {
-        return new PostEntity(null, post.getTitle(), post.getBody(), null);
+        return new PostEntity(null, post.getTitle(), post.getBody(), null, Collections.emptyList());
     }
 }

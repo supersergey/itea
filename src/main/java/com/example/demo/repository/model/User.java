@@ -24,4 +24,7 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
     List<PostEntity> posts;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
+    List<CommentEntity> comments;
 }

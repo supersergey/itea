@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.repository.model.CommentEntity;
 import com.example.demo.repository.model.PostEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +22,9 @@ class PostRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Test
     void shouldReturnPostById() {
@@ -39,7 +44,13 @@ class PostRepositoryTest {
     void shouldSaveANewPost() {
         var user = userRepository.findById(1);
 
-        var actual = postRepository.save(new PostEntity(null, "My new post title", "My new post body", user));
+        var actual = postRepository.save(new PostEntity(
+                null,
+                "My new post title",
+                "My new post body",
+                user,
+                Collections.emptyList()
+        ));
         assertNotNull(actual);
         assertTrue(actual.getId() > 0);
     }
@@ -51,7 +62,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void shouldReturnAllPost() {
+    void shouldReturnAllPosts() {
         var actual = postRepository.findAll();
         assertNotNull(actual);
 
@@ -79,6 +90,35 @@ class PostRepositoryTest {
     void shouldReturnUsersIdsWithTheBiggestNumberOfPosts() {
         var actual = postRepository.findUsersIdsWithTheBiggestNumberOfPosts();
         assertEquals(List.of(3), actual);
+    }
+
+    @Test
+    void shouldAddCommentsToPost() {
+        var user = userRepository.findById(1);
+
+        var post = new PostEntity(
+                null,
+                "New post title",
+                "New post body",
+                user,
+                Collections.emptyList()
+        );
+
+        var savedPost = postRepository.save(post);
+
+        var savedComments = commentRepository.saveAll(List.of(
+                new CommentEntity(null, "Comment 1 title", "Comment 1 body", post, user),
+                new CommentEntity(null, "Comment 2 title", "Comment 2 body", post, user)
+        ));
+        List<CommentEntity> commentEntities = new ArrayList<>();
+        savedComments.forEach(commentEntities::add);
+        savedPost.setComments(commentEntities);
+
+        var actual = postRepository.findById(savedPost.getId()).get();
+
+        assertEquals(user.getId(), actual.getUser().getId());
+
+        assertEquals(2, actual.getComments().size());
     }
 
 }

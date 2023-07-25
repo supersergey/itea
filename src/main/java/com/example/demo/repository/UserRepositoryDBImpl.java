@@ -42,6 +42,7 @@ public class UserRepositoryDBImpl {
                         id,
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
+                        Collections.emptyList(),
                         Collections.emptyList()
                 );
             } else {
@@ -82,6 +83,7 @@ public class UserRepositoryDBImpl {
                             generated.getInt("id"),
                             user.getFirstName(),
                             user.getLastName(),
+                            Collections.emptyList(),
                             Collections.emptyList()
                     );
                 } else {
@@ -118,6 +120,7 @@ public class UserRepositoryDBImpl {
                         resultSet.getInt("id"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
+                        Collections.emptyList(),
                         Collections.emptyList()
                 ));
             }
