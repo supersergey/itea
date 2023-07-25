@@ -48,4 +48,11 @@ class UserRepositoryTest {
         var actual = repository.existsByFirstNameAndLastName("ababa", "ajahj");
         assertThat(actual).isFalse();
     }
+
+    @Test
+    void shouldFindUserLastNameWithMaxPosts()
+    {
+        var actual = repository.getUserLastNameWithMaxPosts();
+        assertThat(actual).isNotNull();
+    }
 }

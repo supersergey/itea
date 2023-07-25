@@ -3,12 +3,15 @@ package com.example.demo.repository.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @Data
 @AllArgsConstructor
-public class User {
+@Table("post")
+public class PostEntity {
     @Id
     Integer id;
-    String firstName;
-    String lastName;
+    String title;
+    String body;
+    Integer userId;
 }

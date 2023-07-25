@@ -2,9 +2,12 @@ package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jdbc.repository.query.Query;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 public class UserRepositoryDBImpl implements UserRepository {
@@ -25,7 +28,6 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-//    @Override
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
@@ -49,12 +51,11 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
+
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return false;
     }
 
-    @Override
     public User save(User user) {
         try (Statement statement = connection.createStatement()) {
             String query = String.format("""
@@ -83,13 +84,43 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
-    public int count() {
-        return 0;
+
+    public int count()
+    {
+        String query = """
+                select count(*) from "user"
+                """;
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
-    @Override
     public Collection<User> findAll() {
-        return null;
+        List<User> users = new ArrayList<>();
+        String query = """
+                select * from "user"
+                """;
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                users.add(new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name")
+                ));
+            }
+            return users;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+    public String getUserLastNameWithMaxPosts() {
+            return null;
     }
 }

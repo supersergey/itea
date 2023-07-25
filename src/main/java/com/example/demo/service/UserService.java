@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public int save(User user) throws DuplicateUserException {
-        if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
+        if (userRepository.existsByFirstNameAndLastName(user.getName(), user.getLastName())) {
             throw new DuplicateUserException(user);
         }
         return userRepository.save(converter.toEntity(user)).getId();
@@ -36,5 +36,10 @@ public class UserService {
 
     public Collection<User> findAll() {
         return Collections.emptyList();
+    }
+
+    public String getUserLastNameWithMaxPosts()
+    {
+        return userRepository.getUserLastNameWithMaxPosts();
     }
 }
