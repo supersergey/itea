@@ -4,7 +4,9 @@ import com.example.demo.repository.model.User;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 public class UserRepositoryDBImpl implements UserRepository {
@@ -56,7 +58,15 @@ public class UserRepositoryDBImpl implements UserRepository {
 
     @Override
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
-        return false;
+        String query = String.format("""
+                select * from "user" where first_name = '%s' and last_name = '%s'
+                """, firstName, lastName);
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            return resultSet.next();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
@@ -90,11 +100,41 @@ public class UserRepositoryDBImpl implements UserRepository {
 
     @Override
     public int count() {
-        return 0;
+        String query = """
+                select count(*) from "user"
+                """;
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     @Override
     public Collection<User> findAll() {
+        List<User> users = new ArrayList<>();
+        String query = """
+                select * from "user"
+                """;
+        try (Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            while (resultSet.next()) {
+                users.add(new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name")
+                ));
+            }
+            return users;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Override
+    public List<String> findUsersLastNamesWithTheBiggestNumberOfPosts() {
         return null;
     }
 }
