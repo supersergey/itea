@@ -23,17 +23,16 @@ public interface UserRepository extends Repository<User, Integer> {
     Collection<User> findAll();
 
     @Query("""
-    select distinct user_posts_stats.last_name
-    from (select p.user_id, u.last_name, count(user_id) as num_of_posts
-          from post p
-                   join "user" u on u.id = p.user_id
-          group by p.user_id, u.last_name) as user_posts_stats
-    where num_of_posts =
-          (select max(amount_of_posts)
-           from (select p.user_id, u.last_name, count(*) as amount_of_posts
-                 from post p
-                          join "user" u on u.id = p.user_id
-                 group by p.user_id, u.last_name) as posts_stats)
+    select distinct u.last_name
+    from "user" u
+             join post p on u.id = p.user_id
+    group by u.id
+    having count(p.id) =
+           (select count(id) as max_post_count
+            from post
+            group by user_id
+            order by max_post_count DESC
+            limit 1)
     """)
     List<String> findUsersLastNamesWithTheBiggestNumberOfPosts();
 }
