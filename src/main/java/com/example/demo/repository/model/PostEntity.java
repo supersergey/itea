@@ -1,20 +1,25 @@
 package com.example.demo.repository.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Table("post")
+@NoArgsConstructor
+@Entity(name = "post")
 public class PostEntity {
-
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_seq")
+    @SequenceGenerator(name = "post_seq", sequenceName = "post_id_seq", allocationSize = 1)
+    Integer id;
+    @Column(nullable = false)
+    String title;
+    @Column(nullable = false)
+    String body;
 
-    private String title;
-    private String body;
-
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 }

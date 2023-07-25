@@ -8,6 +8,7 @@ import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.model.PostEntity;
+import com.example.demo.repository.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,7 +41,10 @@ public class PostServiceImpl implements PostService {
         }
 
         PostEntity postEntity = postConverter.toEntity(post);
-        postEntity.setUserId(userId);
+
+        User user = userRepository.findById(userId);
+
+        postEntity.setUser(user);
 
         return postRepository.save(postEntity).getId();
     }

@@ -23,6 +23,7 @@ public class UserService {
         this.converter = converter;
     }
 
+
     public int save(User user) throws DuplicateUserException {
         if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
             throw new DuplicateUserException(user);

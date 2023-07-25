@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
@@ -19,12 +18,15 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     void shouldReturnPostById() {
         var actual = postRepository.findById(2).get();
         assertEquals("Мій другий пост", actual.getTitle());
         assertEquals("Всім ще більше вітань!", actual.getBody());
-        assertEquals(4, actual.getUserId());
+        assertEquals(4, actual.getUser().getId());
     }
 
     @Test
@@ -35,7 +37,9 @@ class PostRepositoryTest {
 
     @Test
     void shouldSaveANewPost() {
-        var actual = postRepository.save(new PostEntity(null, "My new post title", "My new post body", 1));
+        var user = userRepository.findById(1);
+
+        var actual = postRepository.save(new PostEntity(null, "My new post title", "My new post body", user));
         assertNotNull(actual);
         assertTrue(actual.getId() > 0);
     }

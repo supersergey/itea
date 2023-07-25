@@ -1,8 +1,8 @@
 package com.example.demo.controller.dto;
 
 public class Post {
-    private String title;
-    private String body;
+    private final String title;
+    private final String body;
 
     public Post(String title, String body) {
         this.title = title;
@@ -15,14 +15,6 @@ public class Post {
 
     public String getBody() {
         return body;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 
     @Override

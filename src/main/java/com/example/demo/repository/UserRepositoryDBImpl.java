@@ -7,9 +7,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Collections;
 
 @Slf4j
-public class UserRepositoryDBImpl implements UserRepository {
+public class UserRepositoryDBImpl {
 
     private final Connection connection;
 
@@ -27,11 +28,10 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
-                        where id = %d  
+                        where id = %d
                     """, id);
         try(
                 Statement statement = connection.createStatement();
@@ -41,7 +41,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                 return new User(
                         id,
                         resultSet.getString("first_name"),
-                        resultSet.getString("last_name")
+                        resultSet.getString("last_name"),
+                        Collections.emptyList()
                 );
             } else {
                 return null;
@@ -51,12 +52,6 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
-    public boolean existsById(int id) {
-        return false;
-    }
-
-    @Override
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         String query = String.format("""
                 select * from "user" where first_name = '%s' and last_name = '%s'
@@ -69,7 +64,6 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
     public User save(User user) {
         try (Statement statement = connection.createStatement()) {
             String query = String.format("""
@@ -87,7 +81,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                     return new User(
                             generated.getInt("id"),
                             user.getFirstName(),
-                            user.getLastName()
+                            user.getLastName(),
+                            Collections.emptyList()
                     );
                 } else {
                     return null;
@@ -98,7 +93,6 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
     public int count() {
         String query = """
                 select count(*) from "user"
@@ -112,7 +106,6 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
     public Collection<User> findAll() {
         List<User> users = new ArrayList<>();
         String query = """
@@ -124,7 +117,8 @@ public class UserRepositoryDBImpl implements UserRepository {
                 users.add(new User(
                         resultSet.getInt("id"),
                         resultSet.getString("first_name"),
-                        resultSet.getString("last_name")
+                        resultSet.getString("last_name"),
+                        Collections.emptyList()
                 ));
             }
             return users;
@@ -133,8 +127,4 @@ public class UserRepositoryDBImpl implements UserRepository {
         }
     }
 
-    @Override
-    public List<String> findUsersLastNamesWithTheBiggestNumberOfPosts() {
-        return null;
-    }
 }

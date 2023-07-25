@@ -2,7 +2,8 @@ package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jdbc.repository.query.Query;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import java.util.Collection;
@@ -22,7 +23,7 @@ public interface UserRepository extends Repository<User, Integer> {
 
     Collection<User> findAll();
 
-    @Query("""
+    @Query(value = """
     select distinct u.last_name
     from "user" u
              join post p on u.id = p.user_id
@@ -33,6 +34,6 @@ public interface UserRepository extends Repository<User, Integer> {
             group by user_id
             order by max_post_count DESC
             limit 1)
-    """)
+    """, nativeQuery = true)
     List<String> findUsersLastNamesWithTheBiggestNumberOfPosts();
 }
