@@ -63,7 +63,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByUserId(int userId, int limit, SortOrder sortOrder) throws UserNotFoundException {
-        if (!userRepository.existsById(userId)) {
+        if (userRepository.findById(userId) == null) {
             throw new UserNotFoundException(userId);
         }
         List<PostEntity> postEntities = postRepository.findByUserId(userId);
