@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public int count() {
-        return userRepository.count();
+        return (int) userRepository.count();
     }
 
     public User findById(int id) {

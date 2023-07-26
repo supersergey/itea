@@ -2,14 +2,16 @@ package com.example.demo.repository;
 
 import com.example.demo.repository.model.PostEntity;
 import com.example.demo.repository.model.User;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +25,9 @@ class UserRepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    EntityManager entityManager;
 
     @Test
     void shouldReturnUserById() {
@@ -59,22 +64,52 @@ class UserRepositoryTest {
     @Test
     void shouldAddPostsToUser() {
         var user = new User(
-                null, "Taras", "Petrenko", Collections.emptyList()
+                null, "Taras", "Petrenko", new ArrayList<>()
         );
         var saved = userRepository.save(user);
         postRepository.saveAll(
-                List.of(
+                Arrays.asList(
                         new PostEntity(null, "123", "456", user),
                         new PostEntity(null, "123", "456", user)
                 ));
 
-//        user.setFirstName("Petro");
-        // якщо розкоментувати цю команду, чи буде тест все ще працювати? чому?
-        // що зміниться, якщо прибрати анотацію @Transaction з тестового класа?
+        entityManager.getEntityManagerFactory().getCache().evictAll();
 
-        var actual = userRepository.findById(saved.getId());
+        var actual = userRepository.findById(saved.getId()).get();
 
         assertThat(actual.getPosts()).hasSize(2);
-        assertThat(actual.getFirstName()).isEqualTo("Taras");
+    }
+
+    @Test
+    void shouldReturnUsersHavingAPostWithTitle() {
+        var talkingUser = new User(null, "Користувач", "Говірливий", Collections.emptyList());
+        var silentUser = new User(null, "Користувач", "Мовчазний", new ArrayList<>());
+        userRepository.saveAll(
+                Arrays.asList(talkingUser, silentUser)
+        );
+        talkingUser.setPosts(
+                Arrays.asList(
+                        new PostEntity(null, "Мій новий пост", "Не знаю, про що писати", talkingUser)
+                )
+        );
+
+        var actual = userRepository.findByPostsTitle("Мій новий пост");
+
+        assertThat(actual).extracting(User::getLastName).containsExactly("Говірливий");
+    }
+
+    @Test
+    void findAllOrderByFirstNameDesc() {
+        var actual = userRepository.findAllByFirstNameOrderByIdDesc("Adam");
+        assertThat(actual).extracting(User::getLastName).containsExactly(
+                "Smith", "Charles"
+        );
+    }
+
+    @Test
+    void shouldFindAUserWithMaxNumberOfPosts() {
+        var actual = userRepository.findUserWithMaximalAmountOfPosts();
+
+        assertThat(actual.getLastName()).isEqualTo("Smith");
     }
 }

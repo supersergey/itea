@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "\"user\"")
+@Entity
+@Table(name = "\"user\"")
 public class User {
 
     @Id
@@ -23,5 +25,5 @@ public class User {
     String lastName;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
-    List<PostEntity> posts;
+    List<PostEntity> posts = new ArrayList<>();
 }
