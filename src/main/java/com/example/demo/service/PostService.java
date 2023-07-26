@@ -23,12 +23,11 @@ public class PostService {
     }
 
 
-    public Post save(Post post) throws UnknownUserException
-    {
+    public int save(Post post) throws UnknownUserException {
         if (userService.findById(post.getUserId()) == null) {
             throw new UnknownUserException();
         }
-        return converter.toDto(postRepository.save(converter.toEntity(post)));
+        return postRepository.save(converter.toEntity(post)).getId();
     }
    /* public void delete (int postId) throws UnknownPostException
     {
@@ -49,8 +48,7 @@ public class PostService {
        return postRepository.edit(postId, converter.toEntity(editPost));
     }*/
 
-    public List<Post> getPostsByUserId(int userId) throws UnknownUserException
-    {
+    public List<Post> getPostsByUserId(int userId) throws UnknownUserException {
         if (userService.findById(userId) == null) {
             throw new UnknownUserException();
         }

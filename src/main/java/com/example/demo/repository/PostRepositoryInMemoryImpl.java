@@ -7,21 +7,19 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-public class PostRepositoryInMemoryImpl implements PostRepository{
+public class PostRepositoryInMemoryImpl implements PostRepository {
     private final Map<Integer, PostEntity> posts = new ConcurrentHashMap<>();
 
     private int counter = 0;
 
-    private int nextId()
-    {
+    private int nextId() {
         return counter++;
     }
 
-    public List<PostEntity> getByUserId(int userId)
-    {
+    public List<PostEntity> getByUserId(int userId) {
         return posts.entrySet().stream()
                 .map(Map.Entry::getValue)
-                .filter(post -> userId == post.getUserId())
+                .filter(post -> userId == post.getUser().getId())
                 .toList();
     }
 
@@ -31,26 +29,24 @@ public class PostRepositoryInMemoryImpl implements PostRepository{
         return post;
     }
 
-    public void delete(int postId)
-    {
+    public void delete(int postId) {
         posts.remove(postId);
     }
 
     public int countByUserId(int userId) {
 
-        return (int)posts.entrySet()
+        return (int) posts.entrySet()
                 .stream()
                 .map(Map.Entry::getValue)
-                .map(PostEntity::getUserId)
-                .filter(id->userId==id).count();
+                .map(PostEntity::getUser)
+                .filter(user -> user.getId() == userId).count();
     }
-    public PostEntity getById (int postId)
-    {
+
+    public PostEntity getById(int postId) {
         return posts.get(postId);
     }
 
-    public int edit(int postId, PostEntity updatedPost)
-    {
+    public int edit(int postId, PostEntity updatedPost) {
         posts.put(postId, updatedPost);
         return postId;
     }

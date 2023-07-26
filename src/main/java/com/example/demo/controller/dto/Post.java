@@ -5,23 +5,23 @@ public class Post {
     private final String body;
     private final int userId;
 
-    public  Post(String title, String body, int userId)
-    {
+    public Post(String title, String body, int userId) {
         this.body = body;
         this.title = title;
         this.userId = userId;
     }
 
-    public  String getTitle()
-    {
-        return  title;
+    public String getTitle() {
+        return title;
     }
 
     public String getBody() {
         return body;
     }
 
-    public int getUserId(){return userId;}
+    public int getUserId() {
+        return userId;
+    }
 
     @Override
     public String toString() {

@@ -16,15 +16,13 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping ("/api/posts/new")
-    public int createPost(@RequestBody Post post) throws UnknownUserException
-    {
-        return postService.save(post).getUserId();
+    @PostMapping("/api/posts/new")
+    public int createPost(@RequestBody Post post) throws UnknownUserException {
+        return postService.save(post);
     }
 
     @GetMapping("/{userId}/posts")
-    public List<com.example.demo.controller.dto.Post> getPostsUserId(@PathVariable int userId) throws UnknownUserException
-    {
+    public List<Post> getPostsUserId(@PathVariable int userId) throws UnknownUserException {
         return postService.getPostsByUserId(userId);
     }
 

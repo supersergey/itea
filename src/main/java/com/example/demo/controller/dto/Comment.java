@@ -7,10 +7,9 @@ public class Comment {
     private String body;
     private final Date date;
 
-    private  int id;
+    private int id;
 
-    public Comment (String author, String body, Date date, int id)
-    {
+    public Comment(String author, String body, Date date, int id) {
         this.author = author;
         this.body = body;
         this.date = date;
@@ -29,10 +28,11 @@ public class Comment {
         return date;
     }
 
-    public  int getId() {return id;}
+    public int getId() {
+        return id;
+    }
 
-    public void setBody(String body)
-    {
+    public void setBody(String body) {
         this.body = body;
     }
 

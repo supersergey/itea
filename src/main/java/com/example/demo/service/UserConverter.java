@@ -14,7 +14,6 @@ public class UserConverter implements Converter<User, com.example.demo.repositor
 
     @Override
     public com.example.demo.repository.model.User toEntity(User user) {
-        return new com.example.demo.repository.model.User(null, user.getName(), user.getLastName());
-
+        return new com.example.demo.repository.model.User(null, user.name(), user.lastName(), Collections.emptyList(), Collections.emptyList());
     }
 }

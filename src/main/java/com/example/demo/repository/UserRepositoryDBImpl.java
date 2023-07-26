@@ -2,13 +2,12 @@ package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jdbc.repository.query.Query;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-
 
 @Slf4j
 public class UserRepositoryDBImpl {
@@ -31,10 +30,10 @@ public class UserRepositoryDBImpl {
 
     public User findById(int id) {
         String query = String.format("""
-                        select * from "user"
-                        where id = %d
-                    """, id);
-        try(
+                    select * from "user"
+                    where id = %d  
+                """, id);
+        try (
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query)
         ) {
@@ -43,6 +42,7 @@ public class UserRepositoryDBImpl {
                         id,
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
+                        Collections.emptyList(),
                         Collections.emptyList()
                 );
             } else {
@@ -53,6 +53,7 @@ public class UserRepositoryDBImpl {
         }
     }
 
+
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return false;
     }
@@ -60,9 +61,9 @@ public class UserRepositoryDBImpl {
     public User save(User user) {
         try (Statement statement = connection.createStatement()) {
             String query = String.format("""
-                    insert into "user" (first_name, last_name)
-                    values ('%s', '%s')
-                    """,
+                            insert into "user" (first_name, last_name)
+                            values ('%s', '%s')
+                            """,
                     user.getFirstName(), user.getLastName()
             );
             var updatedCount = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
@@ -75,6 +76,7 @@ public class UserRepositoryDBImpl {
                             generated.getInt("id"),
                             user.getFirstName(),
                             user.getLastName(),
+                            Collections.emptyList(),
                             Collections.emptyList()
                     );
                 } else {
@@ -86,8 +88,8 @@ public class UserRepositoryDBImpl {
         }
     }
 
-    public int count()
-    {
+
+    public int count() {
         String query = """
                 select count(*) from "user"
                 """;
@@ -98,7 +100,6 @@ public class UserRepositoryDBImpl {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
     public Collection<User> findAll() {
@@ -112,7 +113,9 @@ public class UserRepositoryDBImpl {
                 users.add(new User(
                         resultSet.getInt("id"),
                         resultSet.getString("first_name"),
-                        resultSet.getString("last_name")
+                        resultSet.getString("last_name"),
+                        Collections.emptyList(),
+                        Collections.emptyList()
                 ));
             }
             return users;
@@ -121,8 +124,4 @@ public class UserRepositoryDBImpl {
         }
     }
 
-
-    public String getUserLastNameWithMaxPosts() {
-            return null;
-    }
 }

@@ -20,6 +20,7 @@ public class UserRepositoryInMemoryImpl {
         return users.get(id);
     }
 
+
     public boolean existsByFirstNameAndLastName(String firstName, String lastName) {
         return users.entrySet().stream()
                 .anyMatch(u ->
@@ -40,11 +41,5 @@ public class UserRepositoryInMemoryImpl {
 
     public Collection<User> findAll() {
         return users.values();
-    }
-
-    @Override
-    public String getUserLastNameWithMaxPosts()
-    {
-        return null;
     }
 }

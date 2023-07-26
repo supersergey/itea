@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.util.Map;
 
 @Controller
@@ -23,30 +24,25 @@ public class PostWebController {
     }
 
     @GetMapping("/users/{userId}/posts")
-    public String getPosts(Model model, @PathVariable int userId)
-    {
+    public String getPosts(Model model, @PathVariable int userId) {
         try {
             var posts = postService.getPostsByUserId(userId);
             model.addAttribute("posts", posts);
-        }
-        catch (UnknownUserException ex)
-        {
+        } catch (UnknownUserException ex) {
             model.addAttribute("errorMessage", "User doesn't exist!");
         }
         return "view-posts";
     }
 
     @PostMapping("/users/{userId}/posts")
-    public String createPost(Model model, @PathVariable int userId, @RequestParam Map<String, String> body)
-    {
+    public String createPost(Model model, @PathVariable int userId, @RequestParam Map<String, String> body) {
         try {
-                if (body.containsKey("title") && body.containsKey("body")) {
-                    postService.save(new Post(body.get("title"), body.get("body"), userId));
+            if (body.containsKey("title") && body.containsKey("body")) {
+                postService.save(new Post(body.get("title"), body.get("body"), userId));
             }
             var posts = postService.getPostsByUserId(userId);
             model.addAttribute("posts", posts);
-        } catch (UnknownUserException ex)
-        {
+        } catch (UnknownUserException ex) {
             model.addAttribute("errorMessage", "User doesn't exist!");
         }
 
