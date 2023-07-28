@@ -34,6 +34,6 @@ public class User {
     @Convert(converter = CustomUserRoleConverter.class)
     UserRole role;
 
-    @OneToMany(cascade = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
     List<PostEntity> posts;
 }

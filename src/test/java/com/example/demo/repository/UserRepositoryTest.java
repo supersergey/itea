@@ -76,6 +76,9 @@ class UserRepositoryTest {
         // якщо розкоментувати цю команду, чи буде тест все ще працювати? чому?
         // що зміниться, якщо прибрати анотацію @Transaction з тестового класа?
 
+        postRepository.flush();
+        userRepository.flush();
+
         var actual = userRepository.findById(saved.getId()).get();
 
         assertThat(actual.getPosts()).hasSize(2);

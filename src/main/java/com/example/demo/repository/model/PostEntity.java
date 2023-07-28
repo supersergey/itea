@@ -19,7 +19,7 @@ public class PostEntity {
     @Column(nullable = false)
     String body;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     User user;
 }
