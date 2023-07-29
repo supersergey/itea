@@ -9,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 @Slf4j
-public class OpenWeatherService {
+public class OpenWeatherServiceRestImpl {
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
     private final RestTemplate restTemplate = new RestTemplate();
 

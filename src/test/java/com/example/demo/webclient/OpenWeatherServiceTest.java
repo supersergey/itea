@@ -6,11 +6,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {OpenWeatherService.class})
+@SpringBootTest
 class OpenWeatherServiceTest {
 
     @Autowired
-    private OpenWeatherService openWeatherService;
+    private OpenWeatherServiceRestImpl openWeatherService;
 
     @Test
     void getForecast() {
