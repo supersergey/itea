@@ -1,9 +1,5 @@
 package com.example.demo.repository;
 
-import com.example.demo.controller.dto.User;
-import com.example.demo.repository.model.Convertors.UserAndUserEntityConvertor;
-import org.junit.jupiter.api.Test;
-
 class UserRepositoryImplTest {
 
 //    private final UserRepository repository = new UserRepositoryDBImpl();

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Controller
@@ -33,7 +34,7 @@ public class UserWebController {
                 var lastName = body.get("lastName");
                 var age =  Integer.parseInt(body.get("age"));
 
-                userService.save(new User(firstName, lastName, age));
+                userService.save(new User(firstName, lastName, age, Collections.emptyList()));
             }
         } catch (DuplicateUserException ex) {
             model.addAttribute("errorMessage", "User already exists!");

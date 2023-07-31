@@ -1,17 +1,28 @@
 package com.example.demo.repository.model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
-@Table(name = "user")
+@NoArgsConstructor
+@Entity(name = "user")
+@Table(name = "\"user\"")
 public class UserEntity {
+
     @Id
-    Integer id;
-    String firstName;
-    String lastName;
-    int age;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
+    private Integer id;
+
+    private String firstName;
+    private String lastName;
+    private int age;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private List<PostEntity> posts;
 }

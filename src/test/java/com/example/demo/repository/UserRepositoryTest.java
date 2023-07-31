@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -13,43 +15,44 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserRepositoryTest {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Test
     void shouldReturnUserById() {
-        var actual = repository.findById(2).get();
+        var actual = userRepository.findById(2).orElseThrow();
         assertThat(actual.getFirstName()).isEqualTo("George");
         assertThat(actual.getLastName()).isEqualTo("Bush");
     }
 
     @Test
     void shouldReturnNullForInvalidUserId() {
-        var actual = repository.findById(-1);
+        var actual = userRepository.findById(-1);
         assertThat(actual).isEmpty();
     }
 
     @Test
     void shouldSaveANewUser() {
-        var actual = repository.save(new UserEntity(null, "Bobie", "Dylan", 30));
+        var actual = userRepository.save(new UserEntity(null, "Bobie", "Dylan", 30,
+                Collections.emptyList()));
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isNotEqualTo(0);
     }
 
     @Test
     void shouldFindAUserByFirstAndLastName() {
-        var actual = repository.existsByFirstNameAndLastName("Joe", "Biden");
+        var actual = userRepository.existsByFirstNameAndLastName("Joe", "Biden");
         assertThat(actual).isTrue();
     }
 
     @Test
     void shouldNotFindAUserByWrongFirstAndLastName() {
-        var actual = repository.existsByFirstNameAndLastName("ababa", "ajahj");
+        var actual = userRepository.existsByFirstNameAndLastName("ababa", "ajahj");
         assertThat(actual).isFalse();
     }
 
     @Test
     void shouldCountAllUsersInUserTable() {
-        long actual = repository.count();
+        long actual = userRepository.count();
         assertThat(actual).isEqualTo(4);
     }
 }

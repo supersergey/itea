@@ -1,11 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.controller.dto.Post;
 import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.model.Convertors.Convertor;
-import com.example.demo.repository.model.Convertors.UserAndUserEntityConvertor;
+import com.example.demo.repository.model.Convertors.UserConvertor;
 import com.example.demo.repository.model.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,14 +20,14 @@ public class UserService {
 
     private final Convertor<User, UserEntity> convertor;
 
-    public UserService(UserRepository userRepository, UserAndUserEntityConvertor convertor) {
+    public UserService(UserRepository userRepository, UserConvertor convertor) {
         this.convertor = convertor;
     }
 
     public int save(User user) throws DuplicateUserException {
-        if (userRepository.existsByFirstNameAndLastName(user.getName(), user.getLastName())) {
-            throw new DuplicateUserException(user);
-        }
+//        if (userRepository.existsByFirstNameAndLastName(user.getName(), user.getLastName())) {
+//            throw new DuplicateUserException(user);
+//        }
         return userRepository.save(convertor.toEntity(user)).getId();
     }
 
@@ -45,14 +44,14 @@ public class UserService {
         userRepository.delete(convertor.toEntity(user));
     }
 
-    public void update(int userId, User user) {
-        if (userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("Can't update user with id " + userId
-                    + ". Such user doesn't exists.");
-        }
-
-        userRepository.update(userId, user.getName(), user.getLastName(), user.getAge());
-    }
+//    public void update(int userId, User user) {
+//        if (userRepository.existsById(userId)) {
+//            throw new IllegalArgumentException("Can't update user with id " + userId
+//                    + ". Such user doesn't exists.");
+//        }
+//
+//        userRepository.update(userId, user.getName(), user.getLastName(), user.getAge());
+//    }
 
     public long count() {
         return userRepository.count();

@@ -22,7 +22,6 @@ public class UserController {
         } catch (DuplicateUserException ex) {
             System.out.println(ex.getMessage());
         }
-
         return user;
     }
 
@@ -37,16 +36,16 @@ public class UserController {
         return null;
     }
 
-    @PatchMapping("/api/users/update/{userId}")
-    public User updateUserById(@PathVariable int userId, @RequestBody User user) {
-        try {
-            userService.update(userId, user);
-        } catch (IllegalArgumentException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return user;
-    }
+//    @PatchMapping("/api/users/update/{userId}")
+//    public User updateUserById(@PathVariable int userId, @RequestBody User user) {
+//        try {
+//            userService.update(userId, user);
+//        } catch (IllegalArgumentException ex) {
+//            System.out.println(ex.getMessage());
+//        }
+//
+//        return user;
+//    }
 
     @DeleteMapping("/api/users/delete/{userId}")
     public void deletePostById(@PathVariable int userId) {
@@ -56,5 +55,4 @@ public class UserController {
             System.out.println(ex.getMessage());
         }
     }
-
 }

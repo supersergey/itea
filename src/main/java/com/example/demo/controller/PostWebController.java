@@ -9,16 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.Map;
 
 @Controller
 public class PostWebController {
 
-    private final UserService userService;
+//    private final UserService userService;
     private final PostService postService;
 
     public PostWebController(UserService userService, PostService postService) {
-        this.userService = userService;
+//        this.userService = userService;
         this.postService = postService;
     }
 
@@ -33,7 +34,7 @@ public class PostWebController {
     public String createUser(Model model, @RequestParam Map<String, String> body) {
         try {
             if (body.containsKey("title") && body.containsKey("body")) {
-                postService.save(0, new Post(body.get("title"), body.get("body")));
+                postService.save(0, new Post(body.get("title"), body.get("body"), Collections.emptyList()));
             }
         } catch (IllegalArgumentException ex) {
             model.addAttribute("errorMessage", "Post with this title already exists!");

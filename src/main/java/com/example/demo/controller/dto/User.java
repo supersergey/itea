@@ -1,15 +1,18 @@
 package com.example.demo.controller.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
-@Value
+import java.util.List;
+
+@Data
 @AllArgsConstructor
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 public class User {
 
-    String name;
-    String lastName;
-    int age;
+    private String name;
+    private String lastName;
+    private int age;
+    private List<Post> posts;
 }

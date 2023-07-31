@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.controller.dto.Comment;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -12,7 +13,7 @@ public class CommentController {
     @PutMapping("/api/posts/{postId}/comments")
     public String updateComment(@PathVariable int postId,
                                 @RequestBody Comment comment) {
-        comment.setPostId(postId);
+//        comment.setPostId(postId);
         System.out.println(comment);
 
         return comment.toString();
@@ -28,9 +29,10 @@ public class CommentController {
     public List<Comment> getCommentsByPostId(
             @PathVariable int postId) {
 
-        return List.of(
-                new Comment((int) (Math.random() * 1000), postId, "Comment 1 to post with id " + postId),
-                new Comment((int) (Math.random() * 1000), postId, "Comment 2 to post with id " + postId)
-        );
+//        return List.of(
+//                new Comment((int) (Math.random() * 1000), postId, "Comment 1 to post with id " + postId),
+//                new Comment((int) (Math.random() * 1000), postId, "Comment 2 to post with id " + postId)
+//        );
+        return Collections.emptyList();
     }
 }

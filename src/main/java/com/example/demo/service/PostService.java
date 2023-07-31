@@ -4,7 +4,7 @@ import com.example.demo.controller.dto.Post;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.model.Convertors.Convertor;
-import com.example.demo.repository.model.Convertors.PostAndPostEntityConvertor;
+import com.example.demo.repository.model.Convertors.PostConvertor;
 import com.example.demo.repository.model.PostEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class PostService {
     @Autowired
     private UserRepository userRepository;
 
-    public PostService(PostAndPostEntityConvertor convertor) {
+    public PostService(PostConvertor convertor) {
         this.convertor = convertor;
     }
 
