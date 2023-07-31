@@ -1,3 +1,12 @@
 package com.example.demo.controller.dto;
 
-public record User(String name, String lastName) { }
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
+
+@Validated
+public record User(
+        @NotBlank(message = "User name should not be blank") String name,
+        @NotNull @Size(min = 2, max = 50, message = "Last name should be between 2 and 50 chars")
+        String lastName) { }

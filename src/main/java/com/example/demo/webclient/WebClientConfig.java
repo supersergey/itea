@@ -14,6 +14,6 @@ public class WebClientConfig {
         return Feign.builder()
                 .decoder(new JacksonDecoder(objectMapper))
                 .encoder(new JacksonEncoder(objectMapper))
-                .target(OpenWeatherFeignClient.class, "https://api.openweathermap.org/data/2.5/forecast");
+                .target(OpenWeatherFeignClient.class, "https://api.openweathermap.org/data/2.5");
     }
 }

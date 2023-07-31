@@ -1,11 +1,13 @@
 package com.example.demo.webclient;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service("feign")
-@Primary
+@ConditionalOnProperty(prefix = "demo", name = "feign", havingValue = "true")
 public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
     private final OpenWeatherFeignClient client;
 
