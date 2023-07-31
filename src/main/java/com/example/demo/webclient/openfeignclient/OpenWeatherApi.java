@@ -4,12 +4,14 @@ import com.example.demo.webclient.Forecast;
 import com.example.demo.webclient.Location;
 import feign.Param;
 import feign.RequestLine;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 public interface OpenWeatherApi {
 
-@GetMapping
+    @GetMapping
     Forecast getForecast(
             @RequestParam("lon") String longitude,
             @RequestParam("lat") String latitude,
