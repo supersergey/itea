@@ -7,9 +7,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Service
+@Service("rest")
 @Slf4j
-public class OpenWeatherServiceRestImpl {
+public class OpenWeatherServiceRestImpl implements OpenWeatherService {
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
     private final RestTemplate restTemplate = new RestTemplate();
 

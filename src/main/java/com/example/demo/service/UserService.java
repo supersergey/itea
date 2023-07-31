@@ -15,7 +15,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final Converter<User, com.example.demo.repository.model.User> converter;
-
     private final EntityManager entityManager;
 
     public UserService(UserRepository userRepository,
