@@ -16,6 +16,7 @@ import java.util.Objects;
 public class OpenWeatherServiceRestImpl {
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
     private static final String GEO_URL = "https://api.openweathermap.org/geo/1.0/direct";
+
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${openweathermap.apiKey}")
@@ -57,4 +58,5 @@ public class OpenWeatherServiceRestImpl {
             return null;
         }
     }
+
 }

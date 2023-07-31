@@ -24,6 +24,7 @@ public class PostRepositoryTest {
     private UserRepository userRepository;
 
     @Test
+
     void shouldFindByUserId() {
         var actual = repository.getByUserId(2);
         assertThat(actual).isNotEmpty();
@@ -63,5 +64,29 @@ public class PostRepositoryTest {
     void shouldFindAll() {
         var actual = repository.findAll();
         assertThat(actual).isNotNull();
+    }
+}
+    @Transactional
+    void findUserByPostTitle() {
+        var userWithPostTitle = userRepository.save(
+                new User(
+                        null, "Taras", "Petrenko", Arrays.asList())
+        );
+        userWithPostTitle.setPosts(
+                Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle))
+        );
+
+        var userWithWithoutTitle = userRepository.save(
+                new User(
+                        null, "Petro", "Petrenko", Arrays.asList())
+        );
+        userWithWithoutTitle.setPosts(
+                Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle))
+        );
+
+        var actual = postRepository.findUserByPostTitle("Post Title");
+
+        assertThat(actual).extracting(User::getLastName)
+                .containsExactly("Petrenko");
     }
 }

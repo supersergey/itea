@@ -2,7 +2,9 @@ package com.example.demo.webclient;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,6 +15,7 @@ class OpenWeatherServiceTest {
     @Autowired
     @Qualifier("weatherServiceWithFeign")
     private OpenWeatherService openWeatherService;
+
 
     @Test
     void getForecast() {
@@ -31,4 +34,5 @@ class OpenWeatherServiceTest {
         System.out.println(actual);
         assertThat(actual).isNotNull();
     }
+
 }
