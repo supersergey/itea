@@ -11,12 +11,17 @@ import java.util.List;
 
 public interface OpenWeatherApi {
 
-    @GetMapping
-    Forecast getForecast(
-            @RequestParam("lon") String longitude,
-            @RequestParam("lat") String latitude,
-            @RequestParam String units,
-            @RequestParam String apiKey);
+    @RequestLine("GET " +
+            "?" +
+            "lon" + "=" + "{longitude}" + "&" +
+            "lat" + "=" + "{latitude}" + "&" +
+            "units" + "=" + "{units}" + "&" +
+            "apiKey" + "=" + "{apiKey}"
+    )
+    Forecast getForecast(@Param String latitude,
+                         @Param String longitude,
+                         @Param String units,
+                         @Param String apiKey);
 
     @RequestLine("GET " +
             "?" +
