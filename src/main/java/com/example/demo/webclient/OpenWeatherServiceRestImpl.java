@@ -2,20 +2,23 @@ package com.example.demo.webclient;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Service
+@Service(value = "rest")
 @Slf4j
-public class OpenWeatherServiceRestImpl {
+@ConditionalOnProperty(prefix = "demo", name = "rest", havingValue = "true")
+public class OpenWeatherServiceRestImpl implements OpenWeatherService {
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${openweathermap.apiKey}")
     private String apiKey;
 
+    @Override
     public Forecast getForecast(String longitude, String latitude, String units) {
         var uri = UriComponentsBuilder
                 .fromUriString(BASE_URL)

@@ -21,10 +21,18 @@ repositories {
 	mavenCentral()
 }
 
+bootRun {
+	systemProperties = System.properties
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
