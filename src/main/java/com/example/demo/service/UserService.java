@@ -4,7 +4,7 @@ import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,35 +18,39 @@ public class UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final Converter<User, com.example.demo.repository.model.User> converter;
-    private final EntityManager entityManager;
+    private final EntityManagerFactory entityManagerFactory;
 
     public UserService(UserRepository userRepository,
                        PostRepository postRepository,
                        Converter<User, com.example.demo.repository.model.User> converter,
-                       EntityManager entityManager) {
+                       EntityManagerFactory entityManagerFactory) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.converter = converter;
-        this.entityManager = entityManager;
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public int save(User user) throws DuplicateUserException {
         // завантаження СSV-файла
         // парсинг
         // валідація
-        var tx = entityManager.getTransaction();
-        tx.begin();
-        Integer result = null;
-        try {
-            if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
-                throw new DuplicateUserException(user);
+        try (var entityManager = entityManagerFactory.createEntityManager()) {
+            var tx = entityManager.getTransaction();
+            try {
+                tx.begin();
+                if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
+                    throw new DuplicateUserException(user);
+                }
+                var result = userRepository.save(converter.toEntity(user)).getId();
+                tx.commit();
+                return result;
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex; // Re-throw the exception to propagate it further if needed
             }
-            result = userRepository.save(converter.toEntity(user)).getId();
-        } catch (Throwable ex) {
-            tx.rollback();
         }
-        tx.commit();
-        return result == null ? -1 : result;
     }
 
     public int count() {

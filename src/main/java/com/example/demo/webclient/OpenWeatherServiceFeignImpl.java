@@ -1,31 +1,25 @@
-package com.example.demo.webclient.openfeignclient;
+package com.example.demo.webclient;
 
-import com.example.demo.webclient.Forecast;
-import com.example.demo.webclient.Location;
-import com.example.demo.webclient.OpenWeatherService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-@Slf4j
-@Qualifier("weatherServiceWithFeign")
+@Service("feign")
+@ConditionalOnProperty(prefix = "demo", name = "feign", havingValue = "true")
 public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
+    private final OpenWeatherFeignClient weatherFeignClient;
+    private final OpenWeatherFeignClient locationFeignClient;
+    private final String apiKey;
 
-    @Value("${openweathermap.apiKey}")
-    private String apiKey;
-    private final OpenWeatherApi weatherFeignClient;
-    private final OpenWeatherApi locationFeignClient;
-
-    public OpenWeatherServiceFeignImpl(
-            @Qualifier("weatherClient") OpenWeatherApi weatherFeignClient,
-            @Qualifier("locationClient") OpenWeatherApi locationFeignClient
-    ) {
+    public OpenWeatherServiceFeignImpl(@Qualifier("weatherClient") OpenWeatherFeignClient weatherFeignClient,
+                                       @Qualifier("locationClient") OpenWeatherFeignClient locationFeignClient,
+                                       @Value("${openweathermap.apiKey}") String apiKey) {
         this.weatherFeignClient = weatherFeignClient;
         this.locationFeignClient = locationFeignClient;
+        this.apiKey = apiKey;
     }
 
     public Forecast getForecast(String longitude, String latitude, String units) {
@@ -35,4 +29,5 @@ public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
     public List<Location> getLocation(String locationName, int limit) {
         return locationFeignClient.getLocation(locationName, String.valueOf(limit), apiKey);
     }
+
 }

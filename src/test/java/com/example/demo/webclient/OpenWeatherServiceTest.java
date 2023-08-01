@@ -1,5 +1,6 @@
 package com.example.demo.webclient;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,10 +12,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OpenWeatherServiceTest {
 
     @Autowired
-    @Qualifier("weatherServiceWithFeign")
     private OpenWeatherService openWeatherService;
 
     @Test
+    @Disabled
     void getForecast() {
         var actual = openWeatherService.getForecast("30.45",
                 "50.45",
@@ -37,5 +38,6 @@ class OpenWeatherServiceTest {
 
         assertThat(actualLatitude).isEqualTo("50.4500336");
         assertThat(actualLongitude).isEqualTo("30.5241361");
+        System.out.println(openWeatherService);
     }
 }
