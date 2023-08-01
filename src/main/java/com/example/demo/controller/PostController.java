@@ -6,6 +6,7 @@ import com.example.demo.exception.BlankStringException;
 import com.example.demo.exception.PostNotFoundException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,12 @@ public class PostController {
     }
 
     @PostMapping("/api/users/{id}/posts")
-    public int createPost(@PathVariable int id, @RequestBody Post post) throws UserNotFoundException, BlankStringException {
+    public int createPost(@PathVariable int id, @RequestBody @Valid Post post) throws UserNotFoundException, BlankStringException {
         return postService.save(id, post);
     }
 
     @PutMapping("/api/posts/{id}")
-    public Post updatePost(@PathVariable int id, @RequestBody Post post) throws PostNotFoundException {
+    public Post updatePost(@PathVariable int id, @RequestBody @Valid Post post) throws PostNotFoundException {
         return postService.update(id, post);
     }
 
