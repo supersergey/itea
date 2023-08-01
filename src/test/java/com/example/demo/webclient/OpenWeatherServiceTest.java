@@ -1,6 +1,5 @@
 package com.example.demo.webclient;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +14,6 @@ class OpenWeatherServiceTest {
     private OpenWeatherService openWeatherService;
 
     @Test
-    @Disabled
     void getForecast() {
         var actual = openWeatherService.getForecast("30.45",
                 "50.45",
