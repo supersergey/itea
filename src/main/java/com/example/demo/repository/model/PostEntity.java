@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +24,7 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "postEntity", fetch = FetchType.EAGER)
+    List<CommentEntity> comments;
 }

@@ -15,11 +15,12 @@ import java.util.List;
 @Table(name = "\"user\"")
 public class User {
 
-    public User(Integer id, String firstName, String lastName, List<PostEntity> posts) {
+    public User(Integer id, String firstName, String lastName, List<PostEntity> posts, List<CommentEntity> comments) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.posts = posts;
+        this.comments = comments;
     }
 
     @Id
@@ -34,6 +35,9 @@ public class User {
     @Convert(converter = CustomUserRoleConverter.class)
     UserRole role;
 
-    @OneToMany(cascade = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
     List<PostEntity> posts;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
+    List<CommentEntity> comments;
 }

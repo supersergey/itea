@@ -43,7 +43,13 @@ class UserRepositoryTest {
 
     @Test
     void shouldSaveANewUser() {
-        var actual = userRepository.save(new User(null, "Bobie", "Dylan", UserRole.USER, Collections.emptyList()));
+        var actual = userRepository.save(new User(
+                null,
+                "Bobie",
+                "Dylan",
+                Collections.emptyList(),
+                Collections.emptyList()
+        ));
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isNotEqualTo(0);
     }
@@ -71,13 +77,13 @@ class UserRepositoryTest {
     @Test
     void shouldAddPostsToUser() {
         var user = new User(
-                null, "Taras", "Petrenko", UserRole.ADMIN, Collections.emptyList()
+                null, "Taras", "Petrenko", UserRole.ADMIN, Collections.emptyList(), Collections.emptyList()
         );
         var saved = userRepository.save(user);
         postRepository.saveAll(
                 List.of(
-                        new PostEntity(null, "123", "456", user),
-                        new PostEntity(null, "123", "456", user)
+                        new PostEntity(null, "123", "456", user, Collections.emptyList()),
+                        new PostEntity(null, "123", "456", user, Collections.emptyList())
                 ));
 
 //        user.setFirstName("Petro");
@@ -94,18 +100,18 @@ class UserRepositoryTest {
     void shouldFindUserByPostTitle() {
         var userWithPostTitle = userRepository.save(
                 new User(
-                        null, "Taras", "Petrenko", UserRole.ADMIN, Arrays.asList())
+                        null, "Taras", "Petrenko", UserRole.ADMIN, Arrays.asList(), Collections.emptyList())
         );
         userWithPostTitle.setPosts(
-                Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle))
+                Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle, Collections.emptyList()))
         );
 
         var userWithWithoutTitle = userRepository.save(
                 new User(
-                        null, "Petro", "Petrenko", UserRole.ADMIN, Arrays.asList())
+                        null, "Petro", "Petrenko", UserRole.ADMIN, Arrays.asList(), Collections.emptyList())
         );
         userWithWithoutTitle.setPosts(
-                Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle))
+                Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle, Collections.emptyList()))
         );
 
         var user = userRepository.findByPostsTitle("Post Title");

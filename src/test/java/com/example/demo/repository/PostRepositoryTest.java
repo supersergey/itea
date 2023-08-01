@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.repository.model.CommentEntity;
 import com.example.demo.repository.model.PostEntity;
 import com.example.demo.repository.model.User;
 import jakarta.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PostRepositoryTest {
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -44,7 +49,13 @@ class PostRepositoryTest {
     void shouldSaveANewPost() {
         var user = userRepository.findById(1);
 
-        var actual = postRepository.save(new PostEntity(null, "My new post title", "My new post body", user));
+        var actual = postRepository.save(new PostEntity(
+                null,
+                "My new post title",
+                "My new post body",
+                user,
+                Collections.emptyList()
+        ));
         assertNotNull(actual);
         assertTrue(actual.getId() > 0);
     }
@@ -56,7 +67,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void shouldReturnAllPost() {
+    void shouldReturnAllPosts() {
         var actual = postRepository.findAll();
         assertNotNull(actual);
 
@@ -86,22 +97,51 @@ class PostRepositoryTest {
         assertEquals(List.of(3), actual);
     }
 
+    @Test
+    void shouldAddCommentsToPost() {
+        var user = userRepository.findById(1);
+
+        var post = new PostEntity(
+                null,
+                "New post title",
+                "New post body",
+                user,
+                Collections.emptyList()
+        );
+
+        var savedPost = postRepository.save(post);
+
+        var savedComments = commentRepository.saveAll(List.of(
+                new CommentEntity(null, "Comment 1 title", "Comment 1 body", post, user),
+                new CommentEntity(null, "Comment 2 title", "Comment 2 body", post, user)
+        ));
+        List<CommentEntity> commentEntities = new ArrayList<>();
+        savedComments.forEach(commentEntities::add);
+        savedPost.setComments(commentEntities);
+
+        var actual = postRepository.findById(savedPost.getId()).get();
+
+        assertEquals(user.getId(), actual.getUser().getId());
+
+        assertEquals(2, actual.getComments().size());
+    }
+
     @Transactional
     void findUserByPostTitle() {
         var userWithPostTitle = userRepository.save(
                 new User(
-                        null, "Taras", "Petrenko", Arrays.asList())
+                        null, "Taras", "Petrenko", Arrays.asList(), Collections.emptyList())
         );
         userWithPostTitle.setPosts(
-                Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle))
+                Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle, Collections.emptyList()))
         );
 
         var userWithWithoutTitle = userRepository.save(
                 new User(
-                        null, "Petro", "Petrenko", Arrays.asList())
+                        null, "Petro", "Petrenko", Arrays.asList(), Collections.emptyList())
         );
         userWithWithoutTitle.setPosts(
-                Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle))
+                Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle, Collections.emptyList()))
         );
 
         var actual = postRepository.findUserByPostTitle("Post Title");
