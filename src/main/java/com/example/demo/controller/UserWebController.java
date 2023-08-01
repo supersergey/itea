@@ -29,8 +29,8 @@ public class UserWebController {
     @PostMapping("/users")
     public String createUser(Model model, @RequestParam Map<String, String> body) {
         try {
-            if (body.containsKey("firstName") && body.containsKey("lastName")) {
-                userService.save(new User(body.get("firstName"), body.get("lastName")));
+            if (body.containsKey("firstName") && body.containsKey("lastName") && body.containsKey("role")) {
+                userService.save(new User(body.get("firstName"), body.get("lastName"), body.get("role")));
             }
         } catch (DuplicateUserException ex) {
             model.addAttribute("errorMessage", "User already exists!");

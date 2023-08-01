@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,13 +31,20 @@ public class UserService {
         // валідація
         try (var entityManager = entityManagerFactory.createEntityManager()) {
             var tx = entityManager.getTransaction();
-            tx.begin();
-            if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
-                throw new DuplicateUserException(user);
+            try {
+                tx.begin();
+                if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
+                    throw new DuplicateUserException(user);
+                }
+                var result = userRepository.save(converter.toEntity(user)).getId();
+                tx.commit();
+                return result;
+            } catch (Exception ex) {
+                if (tx.isActive()) {
+                    tx.rollback();
+                }
+                throw ex; // Re-throw the exception to propagate it further if needed
             }
-            var result = userRepository.save(converter.toEntity(user)).getId();
-            tx.commit();
-            return result;
         }
     }
 

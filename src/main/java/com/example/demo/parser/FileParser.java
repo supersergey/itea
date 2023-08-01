@@ -1,10 +1,7 @@
-package com.example.demo.locator;
+package com.example.demo.parser;
 
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,8 +19,7 @@ public class FileParser {
                 ));
     }
 
-    public String parse(File file) {
-        FileType extension = new HashSet<>(Arrays.asList(FileType.values())).stream().findFirst().get();
-        return parsers.get(extension).parse();
+    public String parse(FileType type) {
+        return parsers.get(type).parse();
     }
 }

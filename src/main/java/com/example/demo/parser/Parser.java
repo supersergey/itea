@@ -1,4 +1,4 @@
-package com.example.demo.locator;
+package com.example.demo.parser;
 
 public interface Parser {
     FileType supports();

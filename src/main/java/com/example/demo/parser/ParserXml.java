@@ -1,17 +1,16 @@
-package com.example.demo.locator;
+package com.example.demo.parser;
 
 import org.springframework.stereotype.Service;
 
 @Service
-public class ParserCsv implements Parser {
-
+public class ParserXml implements Parser {
     @Override
     public FileType supports() {
-        return FileType.CSV;
+        return FileType.XML;
     }
 
     @Override
     public String parse() {
-        return "CSV";
+        return "XML";
     }
 }
