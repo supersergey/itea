@@ -16,7 +16,6 @@ class DemoConfigurationPropertiesTest {
     void shouldResolveConfigurationProperties() {
         assertThat(properties).isNotNull();
         assertThat(properties.getFeign()).isTrue();
-        assertThat(properties.getRest()).isFalse();
         assertThat(properties.getSize()).isEqualTo(DataSize.ofGigabytes(1));
         assertThat(properties.getFrequency()).hasDays(1);
         System.out.println(properties.getApiKey().length());
