@@ -8,14 +8,25 @@ import org.springframework.data.repository.Repository;
 import java.util.Collection;
 
 @Qualifier("springDataUserRepository")
-public interface UserRepository extends Repository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
+
     User findById(int id);
 
     boolean existsByFirstNameAndLastName(String firstName, String lastName);
 
-    User save(User user);
+    @Query(value = """
+            select u from user u
+            join post p on u = p.user
+            where p.title = :title
+            """)
+    Collection<User> findByPostsTitle(String title);
 
-    int count();
-
-    Collection<User> findAll();
+    @Query(value = """
+                select u, count(p) as c from user u
+                join post p on u = p.user
+                group by u
+                order by c desc
+                limit 1
+            """)
+    User findUserWithMaximalNumberOfPosts();
 }
