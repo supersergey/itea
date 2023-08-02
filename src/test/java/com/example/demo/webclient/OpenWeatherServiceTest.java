@@ -13,9 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OpenWeatherServiceTest {
 
     @Autowired
-    //@Qualifier("weatherServiceWithFeign")
     private OpenWeatherService openWeatherService;
-
 
     @Test
     void getForecast() {
@@ -36,5 +34,4 @@ class OpenWeatherServiceTest {
         assertThat(actual.getLongitude()).isEqualTo("30.5241361");
         assertThat(actual).isNotNull();
     }
-
 }

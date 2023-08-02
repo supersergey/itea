@@ -17,15 +17,16 @@ import java.util.Arrays;
 public class OpenWeatherServiceRestImpl implements OpenWeatherService{
     private final String BASE_URL;
     private final String GEO_URL;
+
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${openweathermap.apiKey}")
     private String apiKey;
 
     public OpenWeatherServiceRestImpl(@Value("${openweathermap.base.url}") String baseUrl,
-                                      @Value("${openweathermap.base.location.url}") String baseLocationUrl) {
+                                      @Value("${openweathermap.geo.url}") String geoUrl) {
         this.BASE_URL = baseUrl;
-        this.GEO_URL = baseLocationUrl;
+        this.GEO_URL = geoUrl;
     }
     public Forecast getForecast(String longitude, String latitude, String units) {
         var uri = UriComponentsBuilder

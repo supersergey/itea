@@ -19,6 +19,7 @@ public class UserConverter implements Converter<User, com.example.demo.repositor
                 null,
                 user.name(),
                 user.lastName(),
+                UserRole.valueOf(user.role().toUpperCase()),
                 Collections.emptyList()
                 );
     }

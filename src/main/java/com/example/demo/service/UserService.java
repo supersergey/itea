@@ -61,9 +61,4 @@ public class UserService {
     public Collection<User> findAll() {
         return users.values();
     }
-
-    /*public String getUserLastNameWithMaxPosts()
-    {
-        return userRepository.getUserLastNameWithMaxPosts();
-    }*/
 }

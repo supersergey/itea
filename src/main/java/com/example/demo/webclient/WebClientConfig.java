@@ -1,5 +1,6 @@
 package com.example.demo.webclient;
 
+
 import com.example.demo.webclient.feign.OpenWeatherApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Feign;
