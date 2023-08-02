@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OpenWeatherServiceTest {
 
     @Autowired
-    @Qualifier("weatherServiceWithFeign")
+    //@Qualifier("weatherServiceWithFeign")
     private OpenWeatherService openWeatherService;
 
     @Test
@@ -21,7 +21,6 @@ class OpenWeatherServiceTest {
                 "metric");
 
         System.out.println(actual);
-
         assertThat(actual).isNotNull();
     }
 
@@ -29,6 +28,9 @@ class OpenWeatherServiceTest {
     void getCoordinates(){
         var actual = openWeatherService.getCoordinates("Kyiv", 1);
         System.out.println(actual);
+        assertThat(actual.getCountry()).isEqualTo("UA");
+        assertThat(actual.getLatitude()).isEqualTo("50.4500336");
+        assertThat(actual.getLongitude()).isEqualTo("30.5241361");
         assertThat(actual).isNotNull();
     }
 }

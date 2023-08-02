@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.controller.dto.Comment;
 import com.example.demo.controller.dto.SortOrder;
@@ -26,7 +27,7 @@ public class CommentController {
     }
 
     @PostMapping("/api/comments")
-    public String createComment(@RequestBody Comment comment) {
+    public String createComment(@RequestBody @Valid Comment comment) {
         System.out.println(comment);
         return String.valueOf(RND.nextInt());
     }
@@ -44,7 +45,7 @@ public class CommentController {
     }*/
 
     @PutMapping("api/comments")
-    public Comment updateComment2(@RequestBody Comment comment) {
+    public Comment updateComment2(@RequestBody @Valid Comment comment) {
         Comment updateComment = new Comment("Taras Kovalenko",
                 "Good job",
                 Calendar.getInstance().getTime(),

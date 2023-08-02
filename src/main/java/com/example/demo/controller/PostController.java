@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.exception.UnknownPostException;
 import com.example.demo.exception.UnknownUserException;
 import com.example.demo.service.PostService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.controller.dto.Post;
 
@@ -16,8 +17,8 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping("/api/posts/new")
-    public int createPost(@RequestBody Post post) throws UnknownUserException {
+    @PostMapping("/api/posts")
+    public int createPost(@RequestBody @Valid Post post) throws UnknownUserException {
         return postService.save(post);
     }
 

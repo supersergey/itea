@@ -1,12 +1,14 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.dto.User;
-import com.example.demo.service.UserService;
-import org.springframework.web.bind.annotation.*;
 import com.example.demo.exception.DuplicateUserException;
+import com.example.demo.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -14,7 +16,7 @@ public class UserController {
     }
 
     @PostMapping("/api/users")
-    public int createUser(@RequestBody User user) throws DuplicateUserException {
+    public int createUser(@RequestBody @Valid User user) throws DuplicateUserException {
         return userService.save(user);
     }
 
@@ -27,5 +29,4 @@ public class UserController {
     public int getStats() {
         return userService.count();
     }
-
 }

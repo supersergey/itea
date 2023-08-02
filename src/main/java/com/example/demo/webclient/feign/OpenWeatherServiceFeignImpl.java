@@ -3,20 +3,14 @@ package com.example.demo.webclient.feign;
 import com.example.demo.webclient.Coordinates;
 import com.example.demo.webclient.Forecast;
 import com.example.demo.webclient.OpenWeatherService;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 
-import java.util.Arrays;
-import java.util.Objects;
-
-@Service
-@Slf4j
-@Qualifier("weatherServiceWithFeign")
+@Service("feign")
+@ConditionalOnProperty(prefix = "demo", name = "feign", havingValue = "true")
 public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
     private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
     private static final String GEO_URL = "https://api.openweathermap.org/geo/1.0/direct";

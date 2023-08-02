@@ -2,25 +2,31 @@ package com.example.demo.webclient;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 @Service
 @Slf4j
-public class OpenWeatherServiceRestImpl {
-    private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
-    private static final String GEO_URL = "https://api.openweathermap.org/geo/1.0/direct";
+@ConditionalOnProperty(prefix = "demo", name = "feign", havingValue = "false")
+public class OpenWeatherServiceRestImpl implements OpenWeatherService{
+    private final String BASE_URL;
+    private final String GEO_URL;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${openweathermap.apiKey}")
     private String apiKey;
 
+    public OpenWeatherServiceRestImpl(@Value("${openweathermap.base.url}") String baseUrl,
+                                      @Value("${openweathermap.base.location.url}") String baseLocationUrl) {
+        this.BASE_URL = baseUrl;
+        this.GEO_URL = baseLocationUrl;
+    }
     public Forecast getForecast(String longitude, String latitude, String units) {
         var uri = UriComponentsBuilder
                 .fromUriString(BASE_URL)
@@ -48,9 +54,11 @@ public class OpenWeatherServiceRestImpl {
                 .build()
                 .toUriString();
         try {
-            return Arrays.stream(Objects.requireNonNull(
-                    restTemplate.getForObject(uri, Coordinates[].class)))
-                    .findFirst().get();
+            var coordinates = restTemplate.getForObject(uri, Coordinates[].class);
+            if(coordinates != null) {
+                return Arrays.stream(coordinates).findFirst().orElse(null);
+            }
+            else return null;
         }
         catch (HttpClientErrorException ex){
             log.error("Error code: {}, message: {}", ex.getStatusCode(), ex.getMessage());

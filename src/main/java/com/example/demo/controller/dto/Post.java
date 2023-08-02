@@ -1,7 +1,13 @@
 package com.example.demo.controller.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class Post {
+    @NotBlank(message = "Post title can't be blank.")
+    @Size(max = 200, message = "title can't be more then 200 characters.")
     private final String title;
+    @NotBlank(message = "Post body can't be blank.")
     private final String body;
     private final int userId;
 

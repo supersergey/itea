@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PostService {
     private final PostRepository postRepository;
     private final Converter<Post, PostEntity> converter;
+    private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final UserService userService;
 
     public PostService(PostRepository postRepository, Converter<Post, PostEntity> converter, UserService userService) {
@@ -25,7 +28,7 @@ public class PostService {
 
     public int save(Post post) throws UnknownUserException {
         if (userService.findById(post.getUserId()) == null) {
-            throw new UnknownUserException();
+            throw new UnknownUserException(post.getUserId());
         }
         return postRepository.save(converter.toEntity(post)).getId();
     }
@@ -50,8 +53,11 @@ public class PostService {
 
     public List<Post> getPostsByUserId(int userId) throws UnknownUserException {
         if (userService.findById(userId) == null) {
-            throw new UnknownUserException();
+            throw new UnknownUserException(userId);
         }
-        return Collections.emptyList();
+        return posts.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .filter(post -> userId == post.getUserId())
+                .toList();
     }
 }
