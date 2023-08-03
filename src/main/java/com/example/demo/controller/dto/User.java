@@ -11,6 +11,7 @@ public record User(
         @NotBlank(message = "User name should not be blank") String name,
         @NotNull @Size(min = 2, max = 50, message = "Last name should be between 2 and 50 chars")
         String lastName,
-        @NotNull @Pattern(regexp = "(GUEST)|(USER)|(ADMIN)|(OWNER)", message = "Unknown user role")
+        @NotNull
+        @Pattern(regexp = "(GUEST)|(USER)|(ADMIN)|(OWNER)", message = "Unknown user role")
         String role
         ) { }

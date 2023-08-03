@@ -6,11 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Qualifier("springDataUserRepository")
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    User findById(int id);
+    Optional<User> findById(int id);
 
     boolean existsByFirstNameAndLastName(String firstName, String lastName);
 

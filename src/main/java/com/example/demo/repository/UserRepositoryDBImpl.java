@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
+import com.example.demo.repository.model.UserRole;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -40,6 +41,7 @@ public class UserRepositoryDBImpl {
                         id,
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
+                        UserRole.valueOf(resultSet.getString("role")),
                         Collections.emptyList()
                 );
             } else {
@@ -72,6 +74,7 @@ public class UserRepositoryDBImpl {
                             generated.getInt("id"),
                             user.getFirstName(),
                             user.getLastName(),
+                            user.getRole(),
                             Collections.emptyList()
                     );
                 } else {

@@ -9,11 +9,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WebClientConfig {
+
     @Bean
-    public OpenWeatherFeignClient getFeignClient(ObjectMapper objectMapper) {
+    public OpenWeatherFeignClient getFeignClient(
+            ObjectMapper objectMapper,
+            WebClientConfigurationProperties properties) {
         return Feign.builder()
                 .decoder(new JacksonDecoder(objectMapper))
                 .encoder(new JacksonEncoder(objectMapper))
-                .target(OpenWeatherFeignClient.class, "https://api.openweathermap.org/data/2.5/forecast");
+                .target(OpenWeatherFeignClient.class, properties.getBaseUrl().toString());
     }
 }

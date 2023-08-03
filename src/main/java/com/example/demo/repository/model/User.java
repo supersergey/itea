@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,13 +15,6 @@ import java.util.List;
 @Entity(name = "user")
 @Table(name = "\"user\"")
 public class User {
-
-    public User(Integer id, String firstName, String lastName, List<PostEntity> posts) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.posts = posts;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
@@ -34,6 +28,17 @@ public class User {
     @Convert(converter = CustomUserRoleConverter.class)
     UserRole role;
 
-    @OneToMany(cascade = CascadeType.REFRESH, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
-    List<PostEntity> posts;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user", fetch = FetchType.EAGER)
+    List<PostEntity> posts = new ArrayList<>();
+
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = new ArrayList<>();
+        if (posts != null) {
+            posts.forEach(post -> {
+                post.setUser(this);
+                this.posts.add(post);
+            });
+        }
+    }
+
 }

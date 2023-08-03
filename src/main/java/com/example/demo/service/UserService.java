@@ -4,6 +4,7 @@ import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.UserRepository;
 import jakarta.persistence.EntityManagerFactory;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,24 +12,18 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final Converter<User, com.example.demo.repository.model.User> converter;
     private final EntityManagerFactory entityManagerFactory;
 
-    public UserService(UserRepository userRepository,
-                       Converter<User, com.example.demo.repository.model.User> converter,
-                       EntityManagerFactory entityManagerFactory) {
-        this.userRepository = userRepository;
-        this.converter = converter;
-        this.entityManagerFactory = entityManagerFactory;
-    }
-
     public int save(User user) throws DuplicateUserException {
         // завантаження СSV-файла
         // парсинг
         // валідація
+
         try (var entityManager = entityManagerFactory.createEntityManager()) {
             var tx = entityManager.getTransaction();
             try {
@@ -54,7 +49,10 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findById(int id) {
-        return converter.toDto(userRepository.findById(id));
+        var user = userRepository.findById(id);
+        return user
+                .map(converter::toDto)
+                .orElse(null);
     }
 
     public Collection<User> findAll() {
