@@ -1,7 +1,13 @@
 package com.example.demo.controller.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class Post {
+
+    @NotBlank(message = "Post title should not be blank")
     private final String title;
+
+    @NotBlank(message = "Post body should not be blank")
     private final String body;
 
     public Post(String title, String body) {

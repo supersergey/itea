@@ -17,12 +17,18 @@ import java.util.Objects;
 @Slf4j
 @ConditionalOnProperty(prefix = "demo", name = "feign", havingValue = "false")
 public class OpenWeatherServiceRestImpl implements OpenWeatherService {
-    private static final String BASE_URL = "https://api.openweathermap.org/data/2.5/forecast";
-    private static final String BASE_LOCATION_URL = "https://api.openweathermap.org/geo/1.0/direct";
+    private final String BASE_URL;
+    private final String BASE_LOCATION_URL;
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${openweathermap.apiKey}")
     private String apiKey;
+
+    public OpenWeatherServiceRestImpl(@Value("${openweathermap.base.url}") String baseUrl,
+                                      @Value("${openweathermap.base.location.url}") String baseLocationUrl) {
+        this.BASE_URL = baseUrl;
+        this.BASE_LOCATION_URL = baseLocationUrl;
+    }
 
     public Forecast getForecast(String longitude, String latitude, String units) {
         var uri = UriComponentsBuilder

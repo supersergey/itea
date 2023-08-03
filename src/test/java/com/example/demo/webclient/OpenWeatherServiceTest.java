@@ -36,6 +36,5 @@ class OpenWeatherServiceTest {
 
         assertThat(actualLatitude).isEqualTo("50.4500336");
         assertThat(actualLongitude).isEqualTo("30.5241361");
-        System.out.println(openWeatherService);
     }
 }
