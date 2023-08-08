@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.controller.dto.Comment;
+import com.example.demo.exception.PostNotFoundException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +19,8 @@ public class CommentController {
     }
 
     @PostMapping("/api/posts/{id}/comments")
-    public int createUser(@PathVariable int id,
-                          @RequestBody @Valid Comment comment) {
+    public int createComment(@PathVariable int id,
+                          @RequestBody @Valid Comment comment) throws PostNotFoundException, UserNotFoundException {
         return commentService.save(id, comment);
     }
 

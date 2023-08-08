@@ -23,8 +23,8 @@ public class WebClientConfig {
             ObjectMapper objectMapper,
             WebClientConfigurationProperties properties) {
         return Feign.builder()
-                .decoder(new JacksonDecoder())
-                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder(objectMapper))
+                .encoder(new JacksonEncoder(objectMapper))
                 .target(OpenWeatherFeignClient.class, properties.getBaseUrl().toString());
     }
 
@@ -36,10 +36,10 @@ public class WebClientConfig {
 
     }
 
-    @Bean
-    @Qualifier("myObjectMapper")
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module());
-
-    }
+//    @Bean
+//    @Qualifier("myObjectMapper")
+//    public ObjectMapper objectMapper() {
+//        return new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module());
+//
+//    }
 }

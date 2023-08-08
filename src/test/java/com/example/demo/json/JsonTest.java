@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Import(WebClientConfig.class)
 public class JsonTest {
     @Autowired
-    @Qualifier("myObjectMapper")
+//    @Qualifier("myObjectMapper")
     ObjectMapper objectMapper;
 
     @Test
