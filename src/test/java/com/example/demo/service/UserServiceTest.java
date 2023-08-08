@@ -19,11 +19,11 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
 
     @Mock
-    private static Converter<User, com.example.demo.repository.model.User> converter;
+    private Converter<User, com.example.demo.repository.model.User> converter;
     @Mock
-    private static UserRepository userRepository;
+    private UserRepository userRepository;
 
-    private static UserService userService;
+    private UserService userService;
 
     @BeforeEach
     public void init() {
