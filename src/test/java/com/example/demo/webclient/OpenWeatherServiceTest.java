@@ -27,8 +27,8 @@ class OpenWeatherServiceTest {
     @Test
     void getLocation() {
         var actual = openWeatherService.getLocation("Kyiv", 1);
-        String actualLatitude = actual.get(0).getLatitude();
-        String actualLongitude = actual.get(0).getLongitude();
+        String actualLatitude = actual.get(0).latitude();
+        String actualLongitude = actual.get(0).longitude();
 
         System.out.println(actual);
 

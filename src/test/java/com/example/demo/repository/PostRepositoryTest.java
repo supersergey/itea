@@ -3,12 +3,12 @@ package com.example.demo.repository;
 import com.example.demo.repository.model.CommentEntity;
 import com.example.demo.repository.model.PostEntity;
 import com.example.demo.repository.model.User;
+import com.example.demo.repository.model.UserRole;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +53,7 @@ class PostRepositoryTest {
                 null,
                 "My new post title",
                 "My new post body",
-                user,
+                user.get(),
                 Collections.emptyList()
         ));
         assertNotNull(actual);
@@ -105,15 +105,15 @@ class PostRepositoryTest {
                 null,
                 "New post title",
                 "New post body",
-                user,
+                user.get(),
                 Collections.emptyList()
         );
 
         var savedPost = postRepository.save(post);
 
         var savedComments = commentRepository.saveAll(List.of(
-                new CommentEntity(null, "Comment 1 title", "Comment 1 body", post, user),
-                new CommentEntity(null, "Comment 2 title", "Comment 2 body", post, user)
+                new CommentEntity(null, "Comment 1 title", "Comment 1 body", post, user.get()),
+                new CommentEntity(null, "Comment 2 title", "Comment 2 body", post, user.get())
         ));
         List<CommentEntity> commentEntities = new ArrayList<>();
         savedComments.forEach(commentEntities::add);
@@ -121,7 +121,7 @@ class PostRepositoryTest {
 
         var actual = postRepository.findById(savedPost.getId()).get();
 
-        assertEquals(user.getId(), actual.getUser().getId());
+        assertEquals(user.get().getId(), actual.getUser().getId());
 
         assertEquals(2, actual.getComments().size());
     }
@@ -130,7 +130,7 @@ class PostRepositoryTest {
     void findUserByPostTitle() {
         var userWithPostTitle = userRepository.save(
                 new User(
-                        null, "Taras", "Petrenko", Arrays.asList(), Collections.emptyList())
+                        null, "Taras", "Petrenko", UserRole.USER, new ArrayList<>(), Collections.emptyList())
         );
         userWithPostTitle.setPosts(
                 Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle, Collections.emptyList()))
@@ -138,7 +138,7 @@ class PostRepositoryTest {
 
         var userWithWithoutTitle = userRepository.save(
                 new User(
-                        null, "Petro", "Petrenko", Arrays.asList(), Collections.emptyList())
+                        null, "Petro", "Petrenko", UserRole.USER, new ArrayList<>(), Collections.emptyList())
         );
         userWithWithoutTitle.setPosts(
                 Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle, Collections.emptyList()))

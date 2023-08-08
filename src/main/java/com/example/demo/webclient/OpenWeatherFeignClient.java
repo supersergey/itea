@@ -9,8 +9,8 @@ public interface OpenWeatherFeignClient {
 
     @RequestLine("GET " +
             "?" +
-            "lon" + "=" + "{lat}" + "&" +
-            "lat" + "=" + "{lon}" + "&" +
+            "lat" + "=" + "{lat}" + "&" +
+            "lon" + "=" + "{lon}" + "&" +
             "units" + "=" + "{units}" + "&" +
             "apiKey" + "=" + "{apiKey}"
     )

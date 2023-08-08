@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
+import com.example.demo.repository.model.UserRole;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -31,7 +32,7 @@ public class UserRepositoryDBImpl {
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
-                        where id = %d
+                        where dataId = %d
                     """, id);
         try(
                 Statement statement = connection.createStatement();
@@ -42,6 +43,7 @@ public class UserRepositoryDBImpl {
                         id,
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
+                        UserRole.valueOf(resultSet.getString("role")),
                         Collections.emptyList(),
                         Collections.emptyList()
                 );
@@ -83,6 +85,7 @@ public class UserRepositoryDBImpl {
                             generated.getInt("id"),
                             user.getFirstName(),
                             user.getLastName(),
+                            user.getRole(),
                             Collections.emptyList(),
                             Collections.emptyList()
                     );
@@ -120,6 +123,7 @@ public class UserRepositoryDBImpl {
                         resultSet.getInt("id"),
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
+                        UserRole.USER,
                         Collections.emptyList(),
                         Collections.emptyList()
                 ));

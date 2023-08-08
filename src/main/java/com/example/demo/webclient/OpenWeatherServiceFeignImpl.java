@@ -16,10 +16,10 @@ public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
 
     public OpenWeatherServiceFeignImpl(@Qualifier("weatherClient") OpenWeatherFeignClient weatherFeignClient,
                                        @Qualifier("locationClient") OpenWeatherFeignClient locationFeignClient,
-                                       @Value("${openweathermap.apiKey}") String apiKey) {
+                                       WebClientConfigurationProperties properties) {
         this.weatherFeignClient = weatherFeignClient;
         this.locationFeignClient = locationFeignClient;
-        this.apiKey = apiKey;
+        this.apiKey = properties.getApiKey();
     }
 
     public Forecast getForecast(String longitude, String latitude, String units) {

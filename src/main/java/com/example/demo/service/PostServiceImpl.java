@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
 
         PostEntity postEntity = postConverter.toEntity(post);
 
-        User user = userRepository.findById(userId);
+        User user = userRepository.findById(userId).get();
 
         postEntity.setUser(user);
 

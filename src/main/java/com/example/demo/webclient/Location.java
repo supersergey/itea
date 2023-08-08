@@ -1,24 +1,13 @@
 package com.example.demo.webclient;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@ToString
-public class Location {
-
-    private String name;
-
-    @JsonProperty(value = "lat")
-    private String latitude;
-
-    @JsonProperty(value = "lon")
-    private String longitude;
-
-    private String country;
+@JsonDeserialize(using = LocationDeserializer.class)
+public record Location(
+        String name,
+        String longitude,
+        String latitude,
+        String localName,
+        String country
+) {
 }

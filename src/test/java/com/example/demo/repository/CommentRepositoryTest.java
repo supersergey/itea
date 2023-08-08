@@ -51,7 +51,7 @@ class CommentRepositoryTest {
                 "My new comment title",
                 "My new comment body",
                 post,
-                user
+                user.get()
         ));
         assertNotNull(actual);
         assertTrue(actual.getId() > 0);
