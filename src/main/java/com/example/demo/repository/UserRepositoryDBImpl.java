@@ -30,7 +30,7 @@ public class UserRepositoryDBImpl {
     public User findById(int id) {
         String query = String.format("""
                         select * from "user"
-                        where id = %d
+                        where dataId = %d
                     """, id);
         try(
                 Statement statement = connection.createStatement();
