@@ -4,12 +4,16 @@ import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.model.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -31,7 +35,7 @@ class UserServiceTest {
 
     @BeforeEach
     public void init() {
-        Mockito.reset(userRepository, converter);
+        Mockito.reset(userRepository, postRepository, converter);
         userService = new UserService(userRepository, postRepository, converter);
     }
 
@@ -71,5 +75,85 @@ class UserServiceTest {
                 .hasMessage("User already exists: Taras Shevchenko");
 
         verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void shouldReturnNumberOfUsers() {
+        when(userRepository.count()).thenReturn(1L);
+
+        var actual = userService.count();
+
+        assertThat(actual).isEqualTo(1L);
+
+        verify(userRepository, times(1)).count();
+    }
+
+    @Test
+    void shouldFindUserById() {
+        Optional<com.example.demo.repository.model.User> optionalOfUserToReturn = Optional.of(mock());
+        when(userRepository.findById(anyInt()))
+                .thenReturn(optionalOfUserToReturn);
+
+        com.example.demo.repository.model.User userEntity = optionalOfUserToReturn.get();
+
+        User user = new User("Taras", "Shevchenko", "ADMIN");
+        when(converter.toDto(userEntity))
+                .thenReturn(user);
+
+        var actual = userService.findById(1);
+
+        assertThat(actual).isEqualTo(user);
+
+        verify(userRepository, times(1)).findById(anyInt());
+        verify(converter, times(1)).toDto(userEntity);
+    }
+
+    @Test
+    void shouldReturnNullIfUserWithSuchIdDoesNotExist() {
+        Optional<com.example.demo.repository.model.User> optionalOfUserToReturn = mock();
+        when(userRepository.findById(anyInt()))
+                .thenReturn(optionalOfUserToReturn);
+
+        var actual = userService.findById(-1);
+
+        assertThat(actual).isNull();
+
+        verify(userRepository, times(1)).findById(anyInt());
+        verify(converter, times(0)).toDto(any(com.example.demo.repository.model.User.class));
+    }
+
+    @Test
+    void shouldReturnAllUsers() {
+        List<com.example.demo.repository.model.User> users = List.of(
+                new com.example.demo.repository.model.User(null, "Joe", "Biden", UserRole.USER, null, null),
+                new com.example.demo.repository.model.User(null, "Adam", "Charles", UserRole.USER, null, null),
+                new com.example.demo.repository.model.User(null, "Adam", "Smith", UserRole.USER, null, null)
+        );
+        when(userRepository.findAll()).thenReturn(users);
+
+        var actual = userService.findAll();
+
+        assertThat(actual).isNotEmpty();
+
+        verify(userRepository, times(1)).findAll();
+    }
+
+    @Test
+    void shouldReturnUsersLastNamesWithTheBiggestNumberOfPosts() {
+        List<String> usersLastNames = List.of(
+                "Charles",
+                "Smith"
+        );
+
+        when(userRepository.findUsersLastNamesWithTheBiggestNumberOfPosts())
+                .thenReturn(usersLastNames);
+
+        var actual = userService.findUserWithTheBiggestNumberOfPosts();
+
+        assertThat(actual)
+                .isNotEmpty()
+                .isEqualTo(usersLastNames);
+
+        verify(userRepository, times(1)).findUsersLastNamesWithTheBiggestNumberOfPosts();
     }
 }

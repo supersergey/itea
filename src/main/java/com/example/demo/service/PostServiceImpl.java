@@ -32,17 +32,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public int save(int userId, Post post) throws UserNotFoundException, BlankStringException {
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException(userId);
-        }
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         if (post.getTitle().isBlank() || post.getBody().isBlank()) {
             throw new BlankStringException("Fields are empty");
         }
 
         PostEntity postEntity = postConverter.toEntity(post);
-
-        User user = userRepository.findById(userId).get();
 
         postEntity.setUser(user);
 
@@ -63,7 +59,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByUserId(int userId, int limit, SortOrder sortOrder) throws UserNotFoundException {
-        if (userRepository.findById(userId) == null) {
+        if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException(userId);
         }
         List<PostEntity> postEntities = postRepository.findByUserId(userId);
