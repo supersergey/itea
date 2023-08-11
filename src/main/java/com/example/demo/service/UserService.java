@@ -48,11 +48,7 @@ public class UserService {
     public Collection<User> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(user -> new User(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getRole().toString())
-                )
+                .map(converter::toDto)
                 .collect(Collectors.toList());
     }
 

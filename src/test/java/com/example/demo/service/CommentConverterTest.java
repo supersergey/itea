@@ -3,7 +3,6 @@ package com.example.demo.service;
 import com.example.demo.controller.dto.Comment;
 import com.example.demo.repository.model.CommentEntity;
 import com.example.demo.repository.model.User;
-import com.example.demo.repository.model.UserRole;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

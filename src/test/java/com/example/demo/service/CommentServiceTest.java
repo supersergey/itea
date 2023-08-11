@@ -70,11 +70,11 @@ class CommentServiceTest {
 
         assertThat(actual).isEqualTo(1);
 
-        verify(postRepository, times(1)).findById(postId);
-        verify(userRepository, times(1)).findById(userId);
-        verify(commentConverter, times(1)).toEntity(comment);
-        verify(commentRepository, times(1)).save(commentEntityMock);
-        verify(savedCommentEntityMock, times(1)).getId();
+        verify(postRepository).findById(postId);
+        verify(userRepository).findById(userId);
+        verify(commentConverter).toEntity(comment);
+        verify(commentRepository).save(commentEntityMock);
+        verify(savedCommentEntityMock).getId();
     }
 
     @Test
@@ -91,7 +91,7 @@ class CommentServiceTest {
                 .isExactlyInstanceOf(PostNotFoundException.class)
                 .hasMessage(String.format("Post with id=%d not found", postId));
 
-        verify(postRepository, times(1)).findById(postId);
+        verify(postRepository).findById(postId);
         verify(userRepository, times(0)).findById(anyInt());
         verify(commentConverter, times(0)).toEntity(any());
         verify(commentRepository, times(0)).save(any());
@@ -113,8 +113,8 @@ class CommentServiceTest {
                 .isExactlyInstanceOf(UserNotFoundException.class)
                 .hasMessage(String.format("User with id=%d not found", userId));
 
-        verify(postRepository, times(1)).findById(postId);
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(postRepository).findById(postId);
+        verify(userRepository).findById(anyInt());
         verify(commentConverter, times(0)).toEntity(any());
         verify(commentRepository, times(0)).save(any());
     }

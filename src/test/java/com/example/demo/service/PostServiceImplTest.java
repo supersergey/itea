@@ -59,9 +59,9 @@ class PostServiceImplTest {
 
         assertThat(actual).isEqualTo(1);
 
-        verify(userRepository, times(1)).findById(userId);
-        verify(postConverter, times(1)).toEntity(postToSave);
-        verify(postRepository, times(1)).save(convertedToEntityPostMock);
+        verify(userRepository).findById(userId);
+        verify(postConverter).toEntity(postToSave);
+        verify(postRepository).save(convertedToEntityPostMock);
     }
 
     @Test
@@ -78,7 +78,7 @@ class PostServiceImplTest {
                 .isExactlyInstanceOf(UserNotFoundException.class)
                 .hasMessage(String.format("User with id=%d not found", userId));
 
-        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository).findById(userId);
         verify(postConverter, times(0)).toEntity(any());
         verify(postRepository, times(0)).save(any());
     }
@@ -152,8 +152,8 @@ class PostServiceImplTest {
         assertThat(actual.getTitle()).isEqualTo("Post title");
         assertThat(actual.getBody()).isEqualTo("Post body");
 
-        verify(postRepository, times(1)).findById(postId);
-        verify(postConverter, times(1)).toDto(savedPostEntity);
+        verify(postRepository).findById(postId);
+        verify(postConverter).toDto(savedPostEntity);
     }
 
     @Test
@@ -169,7 +169,7 @@ class PostServiceImplTest {
                 .isExactlyInstanceOf(PostNotFoundException.class)
                 .hasMessage(String.format("Post with id=%d not found", postId));
 
-        verify(postRepository, times(1)).findById(postId);
+        verify(postRepository).findById(postId);
         verify(postRepository, times(0)).save(any());
     }
 
@@ -193,8 +193,8 @@ class PostServiceImplTest {
         assertThat(actual).isNotEmpty();
         assertThat(actual).hasSize(limit);
 
-        verify(userRepository, times(1)).existsById(userId);
-        verify(postRepository, times(1)).findByUserId(userId);
+        verify(userRepository).existsById(userId);
+        verify(postRepository).findByUserId(userId);
         verify(postConverter, times(3)).toDto(any(PostEntity.class));
     }
 
@@ -212,7 +212,7 @@ class PostServiceImplTest {
                 .isExactlyInstanceOf(UserNotFoundException.class)
                 .hasMessage(String.format("User with id=%d not found", userId));
 
-        verify(userRepository, times(1)).existsById(userId);
+        verify(userRepository).existsById(userId);
         verify(postRepository, times(0)).findByUserId(anyInt());
         verify(postConverter, times(0)).toDto(any());
     }
@@ -226,8 +226,8 @@ class PostServiceImplTest {
         var postId = 1;
         postServiceImpl.delete(postId);
 
-        verify(postRepository, times(1)).findById(postId);
-        verify(postRepository, times(1)).delete(any());
+        verify(postRepository).findById(postId);
+        verify(postRepository).delete(any());
     }
 
     @Test
@@ -242,7 +242,7 @@ class PostServiceImplTest {
                 .isExactlyInstanceOf(PostNotFoundException.class)
                 .hasMessage(String.format("Post with id=%d not found", postId));
 
-        verify(postRepository, times(1)).findById(postId);
+        verify(postRepository).findById(postId);
         verify(postRepository, times(0)).delete(any());
     }
 
@@ -257,8 +257,8 @@ class PostServiceImplTest {
 
         assertThat(actual).isEqualTo(2);
 
-        verify(userRepository, times(1)).existsById(userId);
-        verify(postRepository, times(1)).countByUserId(userId);
+        verify(userRepository).existsById(userId);
+        verify(postRepository).countByUserId(userId);
     }
 
     @Test
@@ -273,7 +273,7 @@ class PostServiceImplTest {
                 .isExactlyInstanceOf(UserNotFoundException.class)
                 .hasMessage(String.format("User with id=%d not found", userId));
 
-        verify(userRepository, times(1)).existsById(userId);
+        verify(userRepository).existsById(userId);
         verify(postRepository, times(0)).countByUserId(anyInt());
     }
 }

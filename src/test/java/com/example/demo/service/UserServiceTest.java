@@ -85,7 +85,7 @@ class UserServiceTest {
 
         assertThat(actual).isEqualTo(1L);
 
-        verify(userRepository, times(1)).count();
+        verify(userRepository).count();
     }
 
     @Test
@@ -104,8 +104,8 @@ class UserServiceTest {
 
         assertThat(actual).isEqualTo(user);
 
-        verify(userRepository, times(1)).findById(anyInt());
-        verify(converter, times(1)).toDto(userEntity);
+        verify(userRepository).findById(anyInt());
+        verify(converter).toDto(userEntity);
     }
 
     @Test
@@ -118,7 +118,7 @@ class UserServiceTest {
 
         assertThat(actual).isNull();
 
-        verify(userRepository, times(1)).findById(anyInt());
+        verify(userRepository).findById(anyInt());
         verify(converter, times(0)).toDto(any(com.example.demo.repository.model.User.class));
     }
 
@@ -135,7 +135,7 @@ class UserServiceTest {
 
         assertThat(actual).isNotEmpty();
 
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository).findAll();
     }
 
     @Test
@@ -154,6 +154,6 @@ class UserServiceTest {
                 .isNotEmpty()
                 .isEqualTo(usersLastNames);
 
-        verify(userRepository, times(1)).findUsersLastNamesWithTheBiggestNumberOfPosts();
+        verify(userRepository).findUsersLastNamesWithTheBiggestNumberOfPosts();
     }
 }
