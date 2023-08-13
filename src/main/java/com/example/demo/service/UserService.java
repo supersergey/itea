@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -45,7 +46,10 @@ public class UserService {
     }
 
     public Collection<User> findAll() {
-        return Collections.emptyList();
+        return userRepository.findAll()
+                .stream()
+                .map(converter::toDto)
+                .collect(Collectors.toList());
     }
 
     /*
