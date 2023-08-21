@@ -4,6 +4,7 @@ import com.example.demo.exception.UnknownUserException;
 import com.example.demo.exception.UnknownPostException;
 import com.example.demo.repository.PostRepository;
 import com.example.demo.controller.dto.Post;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.model.PostEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,47 +18,46 @@ public class PostService {
     private final PostRepository postRepository;
     private final Converter<Post, PostEntity> converter;
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
-    private final UserService userService;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository, Converter<Post, PostEntity> converter, UserService userService) {
+    public PostService(PostRepository postRepository, Converter<Post, PostEntity> converter, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.converter = converter;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
 
     public int save(Post post) throws UnknownUserException {
-        if (userService.findById(post.getUserId()) == null) {
+        if (!userRepository.findById(post.getUserId()).isPresent()) {
             throw new UnknownUserException(post.getUserId());
         }
         return postRepository.save(converter.toEntity(post)).getId();
     }
-   /* public void delete (int postId) throws UnknownPostException
-    {
-        if (postRepository.getById(postId) == null)
-        {
-            throw new UnknownPostException();
-        }
-        postRepository.delete(postId);
-    }*/
-
-    /*public int edit (int postId, Post editPost) throws UnknownPostException
-    {
-        Post thisPost = converter.toDto(postRepository.getById(postId));
-       if (thisPost != null)
-       {
-           throw new UnknownPostException();
-       }
-       return postRepository.edit(postId, converter.toEntity(editPost));
-    }*/
 
     public List<Post> getPostsByUserId(int userId) throws UnknownUserException {
-        if (userService.findById(userId) == null) {
+        if (!userRepository.existsById(userId)) {
             throw new UnknownUserException(userId);
         }
-        return posts.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .filter(post -> userId == post.getUserId())
+        List<PostEntity> postEntities = postRepository.getByUserId(userId);
+        return postEntities.stream()
+                .map(converter::toDto)
                 .toList();
+    }
+
+    public int countByUserId(int userId) throws UnknownUserException {
+        if (!userRepository.existsById(userId)) {
+            throw new UnknownUserException(userId);
+        }
+        return postRepository.countByUserId(userId);
+    }
+
+    public void delete(int postId) throws UnknownPostException {
+        if(!postRepository.existsById(postId)){
+            throw new UnknownPostException(postId);
+        }
+        PostEntity postEntity = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new UnknownPostException(postId));
+        postRepository.delete(postEntity);
     }
 }
