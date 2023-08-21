@@ -70,7 +70,7 @@ public class PostRepositoryTest {
     void findUserByPostTitle() {
         var userWithPostTitle = userRepository.save(
                 new User(
-                        null, "Taras", "Petrenko", Arrays.asList())
+                        null, "Taras", "Petrenko", UserRole.USER, new ArrayList<>())
         );
         userWithPostTitle.setPosts(
                 Arrays.asList(new PostEntity(null, "Post Title", "PostBody", userWithPostTitle))
@@ -78,7 +78,7 @@ public class PostRepositoryTest {
 
         var userWithWithoutTitle = userRepository.save(
                 new User(
-                        null, "Petro", "Petrenko", Arrays.asList())
+                        null, "Petro", "Petrenko", UserRole.USER, new ArrayList<>())
         );
         userWithWithoutTitle.setPosts(
                 Arrays.asList(new PostEntity(null, "Another title", "PostBody", userWithWithoutTitle))

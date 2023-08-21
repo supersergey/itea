@@ -31,14 +31,16 @@ class UserRepositoryTest {
     @Test
     void shouldReturnUserById() {
         var actual = userRepository.findById(2);
-        assertThat(actual.getFirstName()).isEqualTo("George");
-        assertThat(actual.getLastName()).isEqualTo("Bush");
+        assertThat(actual).isPresent();
+        var user = actual.get();
+        assertThat(user.getFirstName()).isEqualTo("George");
+        assertThat(user.getLastName()).isEqualTo("Bush");
     }
 
     @Test
     void shouldReturnNullForInvalidUserId() {
         var actual = userRepository.findById(-1);
-        assertThat(actual).isNull();
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -73,17 +75,13 @@ class UserRepositoryTest {
         var saved = userRepository.save(user);
         postRepository.saveAll(
                 List.of(
-                        new PostEntity(null, "123", "456", user),
-                        new PostEntity(null, "123", "456", user)
+                        new PostEntity(null, "123", "456", saved),
+                        new PostEntity(null, "123", "456", saved)
                 ));
-
-//        user.setFirstName("Petro");
-        // якщо розкоментувати цю команду, чи буде тест все ще працювати? чому?
-        // що зміниться, якщо прибрати анотацію @Transaction з тестового класа?
 
         var actual = userRepository.findById(saved.getId()).get();
 
-        assertThat(actual.getPosts()).hasSize(2);
+        assertThat(saved.getPosts()).hasSize(2);
         assertThat(actual.getFirstName()).isEqualTo("Taras");
     }
 

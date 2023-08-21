@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.repository.model.User;
+import com.example.demo.repository.model.UserRole;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -34,6 +35,7 @@ public class UserRepositoryDBImpl {
                     where id = %d  
                 """, id);
         try (
+
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(query)
         ) {

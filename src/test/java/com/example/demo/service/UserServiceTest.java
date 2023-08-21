@@ -4,6 +4,7 @@ import com.example.demo.controller.dto.User;
 import com.example.demo.exception.DuplicateUserException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.repository.model.UserRole;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,7 +74,6 @@ class UserServiceTest {
 
         verify(userRepository, times(0)).save(any());
     }
-
 
     @Test
     void shouldShowNumberOfUsers() {

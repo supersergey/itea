@@ -3,6 +3,8 @@ package com.example.demo.webclient;
 
 import com.example.demo.webclient.feign.OpenWeatherApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -31,5 +33,6 @@ public class WebClientConfig {
         return Feign.builder()
                 .decoder(new JacksonDecoder())
                 .target(OpenWeatherApi.class, GEO_URL);
+
     }
 }
