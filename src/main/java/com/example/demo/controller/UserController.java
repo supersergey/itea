@@ -16,7 +16,7 @@ public class UserController {
     }
 
     @PostMapping("/api/users")
-    public int createUser(@RequestBody @Valid User user) throws DuplicateUserException {
+    public Integer createUser(@RequestBody @Valid User user) throws DuplicateUserException {
         return userService.save(user);
     }
 
