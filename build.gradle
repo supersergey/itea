@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
 
-//	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4'
+	testImplementation "org.wiremock:wiremock:3.0.1"
 
 	implementation 'io.github.openfeign:feign-core:12.4'
 	implementation 'io.github.openfeign:feign-jackson:12.4'

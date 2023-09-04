@@ -1,0 +1,59 @@
+{
+  "cod": "200",
+  "message": 0,
+  "cnt": 40,
+  "list": [
+    {
+      "dt": 1693828800,
+      "main": {
+        "temp": 22.00,
+        "feels_like": 20.00,
+        "temp_min": 22.00,
+        "temp_max": 22.00,
+        "pressure": 1021,
+        "sea_level": 1021,
+        "grnd_level": 998,
+        "humidity": 43,
+        "temp_kf": 0
+      },
+      "weather": [
+        {
+          "id": 500,
+          "main": "Rain",
+          "description": "light rain",
+          "icon": "10d"
+        }
+      ],
+      "clouds": {
+        "all": 98
+      },
+      "wind": {
+        "speed": 5.78,
+        "deg": 357,
+        "gust": 7.3
+      },
+      "visibility": 10000,
+      "pop": 0.24,
+      "rain": {
+        "3h": 0.13
+      },
+      "sys": {
+        "pod": "d"
+      },
+      "dt_txt": "2023-09-04 12:00:00"
+    }
+  ],
+  "city": {
+    "id": 709248,
+    "name": "Fastiv",
+    "coord": {
+      "lat": 50,
+      "lon": 30
+    },
+    "country": "UA",
+    "population": 51143,
+    "timezone": 10800,
+    "sunrise": 1693797533,
+    "sunset": 1693845598
+  }
+}
