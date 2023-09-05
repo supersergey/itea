@@ -1,5 +1,6 @@
 package com.example.demo.webclient;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,13 +15,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class WebClientConfig {
     private final String BASE_LOCATION_URL;
+
     public WebClientConfig(@Value("${openweathermap.base.location.url}") String baseLocationUrl) {
-    this.BASE_LOCATION_URL = baseLocationUrl;
+        this.BASE_LOCATION_URL = baseLocationUrl;
     }
 
     @Bean("weatherClient")
     public OpenWeatherFeignClient getFeignClient(
-            ObjectMapper objectMapper,
+            @Qualifier("webClientObjectMapper") ObjectMapper objectMapper,
             WebClientConfigurationProperties properties) {
         return Feign.builder()
                 .decoder(new JacksonDecoder(objectMapper))
@@ -33,13 +35,13 @@ public class WebClientConfig {
         return Feign.builder()
                 .decoder(new JacksonDecoder())
                 .target(OpenWeatherFeignClient.class, BASE_LOCATION_URL);
-
     }
 
-//    @Bean
-//    @Qualifier("myObjectMapper")
-//    public ObjectMapper objectMapper() {
-//        return new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module());
-//
-//    }
+    @Bean
+    @Qualifier("webClientObjectMapper")
+    public ObjectMapper webClientObjectMapper() {
+        return new ObjectMapper()
+                .registerModules(new JavaTimeModule(), new Jdk8Module())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 }

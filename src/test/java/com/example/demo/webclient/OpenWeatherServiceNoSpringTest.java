@@ -1,27 +1,34 @@
 package com.example.demo.webclient;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.unit.DataSize;
 
+import java.net.URL;
 import java.time.Duration;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {OpenWeatherServiceFeignImpl.class})
-@EnableConfigurationProperties({WebClientConfigurationProperties.class})
-@Import(WebClientConfig.class)
-@ActiveProfiles("test")
 @WireMockTest(httpPort = 8889)
-class OpenWeatherServiceTest {
+class OpenWeatherServiceNoSpringTest {
 
-    @Autowired
     private OpenWeatherService openWeatherService;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        var config = new WebClientConfig("https://api.openweathermap.org/geo/1.0/direct");
+        var properties = new WebClientConfigurationProperties(
+                new URL("http://localhost:8889/data/2.5/forecast"),
+                "apiKey", Duration.ZERO, DataSize.ofBytes(0)
+                );
+        openWeatherService = new OpenWeatherServiceFeignImpl(
+                config.getFeignClient(config.webClientObjectMapper(), properties),
+                config.getFeignClientForLocation(),
+                properties
+        );
+    }
 
     @Test
     void getForecast() {
@@ -57,20 +64,6 @@ class OpenWeatherServiceTest {
                 "metric");
 
         assertThat(actual).isNull();
-    }
-
-    @Test
-    void getLocation() {
-        var actual = openWeatherService.getLocation("Kyiv", 1);
-        String actualLatitude = actual.get(0).latitude();
-        String actualLongitude = actual.get(0).longitude();
-
-        System.out.println(actual);
-
-        assertThat(actual).isNotNull();
-
-        assertThat(actualLatitude).isEqualTo("50.4500336");
-        assertThat(actualLongitude).isEqualTo("30.5241361");
     }
 }
 

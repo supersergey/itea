@@ -30,7 +30,9 @@ public class UserService {
         if (userRepository.existsByFirstNameAndLastName(user.name(), user.lastName())) {
             throw new DuplicateUserException(user);
         }
-        return userRepository.save(converter.toEntity(user)).getId();
+        return userRepository.save(
+                converter.toEntity(user)
+        ).getId();
     }
 
     public int count() {

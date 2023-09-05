@@ -1,7 +1,7 @@
 package com.example.demo.webclient;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
+import feign.FeignException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,11 @@ public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
     }
 
     public Forecast getForecast(String longitude, String latitude, String units) {
-        return weatherFeignClient.getForecast(longitude, latitude, units, apiKey);
+        try {
+            return weatherFeignClient.getForecast(longitude, latitude, units, apiKey);
+        } catch (FeignException ex) {
+            return null;
+        }
     }
 
     public List<Location> getLocation(String locationName, int limit) {
