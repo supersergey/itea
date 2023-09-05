@@ -31,7 +31,11 @@ public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
     }
 
     public List<Location> getLocation(String locationName, int limit) {
-        return locationFeignClient.getLocation(locationName, String.valueOf(limit), apiKey);
+        try {
+            return locationFeignClient.getLocation(locationName, String.valueOf(limit), apiKey);
+        } catch (FeignException e) {
+            return null;
+        }
     }
 
 }

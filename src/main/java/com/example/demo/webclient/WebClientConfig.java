@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import feign.Feign;
+import feign.codec.ErrorDecoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WebClientConfig {
-    private final String BASE_LOCATION_URL;
-
-    public WebClientConfig(@Value("${openweathermap.base.location.url}") String baseLocationUrl) {
-        this.BASE_LOCATION_URL = baseLocationUrl;
-    }
 
     @Bean("weatherClient")
     public OpenWeatherFeignClient getFeignClient(
@@ -31,10 +27,16 @@ public class WebClientConfig {
     }
 
     @Bean("locationClient")
-    public OpenWeatherFeignClient getFeignClientForLocation() {
+    public OpenWeatherFeignClient getFeignClientForLocation(
+            @Qualifier("webClientObjectMapper") ObjectMapper objectMapper,
+            WebClientConfigurationProperties properties,
+            ErrorDecoder errorDecoder
+    ) {
         return Feign.builder()
-                .decoder(new JacksonDecoder())
-                .target(OpenWeatherFeignClient.class, BASE_LOCATION_URL);
+                .decoder(new JacksonDecoder(objectMapper))
+                .encoder(new JacksonEncoder(objectMapper))
+                .errorDecoder(errorDecoder)
+                .target(OpenWeatherFeignClient.class, properties.getBaseLocationUrl().toString());
     }
 
     @Bean
@@ -43,5 +45,10 @@ public class WebClientConfig {
         return new ObjectMapper()
                 .registerModules(new JavaTimeModule(), new Jdk8Module())
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
+    @Bean
+    public ErrorDecoder locationFeignClientErrorDecoder() {
+        return new OpenWeatherFeignClientErrorDecoder();
     }
 }
