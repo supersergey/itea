@@ -61,16 +61,31 @@ class OpenWeatherServiceTest {
 
     @Test
     void getLocation() {
+        stubFor(get(urlPathEqualTo("/geo/1.0/direct"))
+                .willReturn(
+                        ok().withBodyFile("openweather_location_success.json")
+                )
+        );
+        var actual = openWeatherService.getLocation("Kyiv", 1).get(0);
+        String actualLatitude = actual.latitude();
+        String actualLongitude = actual.longitude();
+
+        assertThat(actualLatitude).isEqualTo("50.45");
+        assertThat(actualLongitude).isEqualTo("30.52");
+    }
+
+    @Test
+    void shouldReturnNullOn500ErrorWhenReceivingLocation() {
+        stubFor(get(urlPathEqualTo("/geo/1.0/direct"))
+                .willReturn(
+                        aResponse()
+                                .withStatus(500)
+                                .withBody("Internal Server Error")
+                )
+        );
+
         var actual = openWeatherService.getLocation("Kyiv", 1);
-        String actualLatitude = actual.get(0).latitude();
-        String actualLongitude = actual.get(0).longitude();
-
-        System.out.println(actual);
-
-        assertThat(actual).isNotNull();
-
-        assertThat(actualLatitude).isEqualTo("50.4500336");
-        assertThat(actualLongitude).isEqualTo("30.5241361");
+        assertThat(actual).isNull();
     }
 }
 

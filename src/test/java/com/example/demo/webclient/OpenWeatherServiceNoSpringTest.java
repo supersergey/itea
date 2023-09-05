@@ -18,14 +18,15 @@ class OpenWeatherServiceNoSpringTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        var config = new WebClientConfig("https://api.openweathermap.org/geo/1.0/direct");
+        var config = new WebClientConfig();
         var properties = new WebClientConfigurationProperties(
                 new URL("http://localhost:8889/data/2.5/forecast"),
+                new URL("http://localhost:8889/geo/1.0/direct"),
                 "apiKey", Duration.ZERO, DataSize.ofBytes(0)
                 );
         openWeatherService = new OpenWeatherServiceFeignImpl(
                 config.getFeignClient(config.webClientObjectMapper(), properties),
-                config.getFeignClientForLocation(),
+                config.getFeignClientForLocation(config.webClientObjectMapper(), properties, new OpenWeatherFeignClientErrorDecoder()),
                 properties
         );
     }

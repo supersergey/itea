@@ -14,6 +14,7 @@ import java.time.Duration;
 @Validated
 public class WebClientConfigurationProperties {
     @NotNull URL baseUrl;
+    @NotNull URL baseLocationUrl;
     @NotNull String apiKey;
     @NotNull Duration updateFrequency;
     @NotNull DataSize maxSize;
