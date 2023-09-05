@@ -1,5 +1,6 @@
 package com.example.demo.webclient;
 
+import feign.FeignException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,11 @@ public class OpenWeatherServiceFeignImpl implements OpenWeatherService {
     }
 
     public Forecast getForecast(String longitude, String latitude, String units) {
-        return client.getForecast(longitude, latitude, units, apiKey);
+        try {
+            return client.getForecast(longitude, latitude, units, apiKey);
+        } catch (FeignException ex) {
+            return null;
+        }
     }
 
 }

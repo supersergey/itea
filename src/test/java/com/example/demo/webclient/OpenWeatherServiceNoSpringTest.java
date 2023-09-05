@@ -1,27 +1,33 @@
 package com.example.demo.webclient;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.unit.DataSize;
 
+import java.net.URL;
 import java.time.Duration;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = {OpenWeatherServiceFeignImpl.class})
-@EnableConfigurationProperties({WebClientConfigurationProperties.class})
-@Import(WebClientConfig.class)
-@ActiveProfiles("test")
 @WireMockTest(httpPort = 8889)
-class OpenWeatherServiceTest {
+class OpenWeatherServiceNoSpringTest {
 
-    @Autowired
     private OpenWeatherService openWeatherService;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        var config = new WebClientConfig();
+        var properties = new WebClientConfigurationProperties(
+                new URL("http://localhost:8889/data/2.5/forecast"),
+                "apiKey", Duration.ZERO, DataSize.ofBytes(0)
+                );
+        openWeatherService = new OpenWeatherServiceFeignImpl(
+                config.getFeignClient(config.webClientObjectMapper(), properties),
+                properties
+        );
+    }
 
     @Test
     void getForecast() {

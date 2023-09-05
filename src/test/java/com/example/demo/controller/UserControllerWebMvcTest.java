@@ -72,6 +72,6 @@ class UserControllerWebMvcTest {
         )
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.detail").value("Invalid request content."));
+                .andExpect(jsonPath("$.detail").value("Unknown user role"));
     }
 }

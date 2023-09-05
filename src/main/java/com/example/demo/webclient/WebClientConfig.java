@@ -1,5 +1,6 @@
 package com.example.demo.webclient;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -15,7 +16,7 @@ public class WebClientConfig {
 
     @Bean
     public OpenWeatherFeignClient getFeignClient(
-            ObjectMapper objectMapper,
+            @Qualifier("webClientObjectMapper") ObjectMapper objectMapper,
             WebClientConfigurationProperties properties) {
         return Feign.builder()
                 .decoder(new JacksonDecoder(objectMapper))
@@ -24,8 +25,10 @@ public class WebClientConfig {
     }
 
     @Bean
-    @Qualifier("myObjectMapper")
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper().registerModules(new JavaTimeModule(), new Jdk8Module());
+    @Qualifier("webClientObjectMapper")
+    public ObjectMapper webClientObjectMapper() {
+        return new ObjectMapper()
+                .registerModules(new JavaTimeModule(), new Jdk8Module())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }
