@@ -23,7 +23,7 @@ public class CustomUserRoleConverter implements AttributeConverter<UserRole, Str
             case "GAST" -> UserRole.GUEST;
             case "BENUTZER" -> UserRole.USER;
             case "BESITZER" -> UserRole.OWNER;
-            default -> throw new IllegalArgumentException("Unknown user roles" + dbData);
+            default -> throw new IllegalArgumentException("Unknown user roles: " + dbData);
         };
     }
 }

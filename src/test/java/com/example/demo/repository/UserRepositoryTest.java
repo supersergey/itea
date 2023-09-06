@@ -3,13 +3,23 @@ package com.example.demo.repository;
 import com.example.demo.repository.model.PostEntity;
 import com.example.demo.repository.model.User;
 import com.example.demo.repository.model.UserRole;
-import jakarta.transaction.Transactional;
+import com.github.database.rider.core.api.configuration.DBUnit;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,8 +27,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Testcontainers
+@ActiveProfiles("test")
+@DBRider
+@DBUnit(caseSensitiveTableNames = true, schema = "public")
 class UserRepositoryTest {
 
     @Autowired
@@ -28,7 +42,22 @@ class UserRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
+    @Container
+    private static final PostgreSQLContainer postgresqlContainer = new PostgreSQLContainer("postgres:14.2")
+            .withDatabaseName("postgres")
+            .withUsername("postgres")
+            .withPassword("postgres");
+
+    @DynamicPropertySource
+    static void postgresProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgresqlContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgresqlContainer::getUsername);
+        registry.add("spring.datasource.password", postgresqlContainer::getPassword);
+        registry.add("schema", () -> "public");
+    }
+
     @Test
+    @DataSet("users.yml")
     void shouldReturnUserById() {
         var actual = userRepository.findById(2);
         assertThat(actual).isPresent();
@@ -44,13 +73,14 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DataSet(cleanBefore = true)
+    @ExpectedDataSet(value = "addUser.yml", ignoreCols = "id")
     void shouldSaveANewUser() {
-        var actual = userRepository.save(new User(null, "Bobie", "Dylan", UserRole.USER, Collections.emptyList()));
-        assertThat(actual).isNotNull();
-        assertThat(actual.getId()).isNotEqualTo(0);
+        userRepository.saveAndFlush(new User(null, "Bobie", "Dylan", UserRole.USER, Collections.emptyList()));
     }
 
     @Test
+    @DataSet("users.yml")
     void shouldFindAUserByFirstAndLastName() {
         var actual = userRepository.existsByFirstNameAndLastName("Joe", "Biden");
         assertThat(actual).isTrue();
@@ -63,12 +93,13 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DataSet("users.yml")
     void shouldAddPostsToUser() {
         var user = new User(
                 null, "Taras", "Petrenko", UserRole.ADMIN, Collections.emptyList()
         );
-        var saved = userRepository.save(user);
-        postRepository.saveAll(
+        var saved = userRepository.saveAndFlush(user);
+        postRepository.saveAllAndFlush(
                 List.of(
                         new PostEntity(null, "123", "456", saved),
                         new PostEntity(null, "123", "456", saved)
@@ -106,13 +137,15 @@ class UserRepositoryTest {
     }
 
     @Test
+    @DataSet({"users.yml", "posts.yml"})
     void shouldReturnAUserWithMaxPosts() {
         var actual = userRepository.findUserWithMaximalNumberOfPosts();
 
-        assertThat(actual).extracting(User::getLastName).isEqualTo("Smith");
+        assertThat(actual).extracting(User::getLastName).isEqualTo("Charles");
     }
 
     @Test
+    @DataSet("users.yml")
     void shouldReturnAllUsersPagedAndSorted() {
         var actual = userRepository.findAll(
                 PageRequest.of(0, 2, Sort.by("lastName").descending())
