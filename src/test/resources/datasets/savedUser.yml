@@ -1,0 +1,5 @@
+user:
+  - id: "regex:\\d+"
+    first_name: "Bobie"
+    last_name: "Dylan"
+    role: "BENUTZER"

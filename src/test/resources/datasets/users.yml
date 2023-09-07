@@ -1,0 +1,13 @@
+user:
+  - id: 1
+    first_name: "Joe"
+    last_name: "Biden"
+  - id: 2
+    first_name: "George"
+    last_name: "Bush"
+  - id: 3
+    first_name: "Adam"
+    last_name: "Smith"
+  - id: 4
+    first_name: "Adam"
+    last_name: "Charles"

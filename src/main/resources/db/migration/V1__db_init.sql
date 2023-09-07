@@ -43,16 +43,3 @@ alter table post
     owner to postgres;
 
 alter sequence post_id_seq owned by post.id;
-
-insert into "user"
-values (1, 'Joe', 'Biden'),
-       (4, 'Adam', 'Charles'),
-       (3, 'Adam', 'Smith'),
-       (2, 'George', 'Bush');
-
-insert into post
-values
-(3,'ABC','XYZ',2),
-(2,'Мій другий пост','Всім ще більше вітань!',4),
-(1,'Мій перший пост','Всім привіт',3),
-(4,'Новий пост','Тіло нового поста',3);
