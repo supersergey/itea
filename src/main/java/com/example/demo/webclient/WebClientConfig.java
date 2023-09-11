@@ -1,38 +1,45 @@
 package com.example.demo.webclient;
 
-
-import com.example.demo.webclient.feign.OpenWeatherApi;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.example.demo.webclient.feign.OpenWeatherFeignClient;
 
 @Configuration
 public class WebClientConfig {
-    private final String BASE_URL;
-    private final String GEO_URL;
-    public WebClientConfig(@Value("${openweathermap.base.url}") String baseUrl,
-                           @Value("${openweathermap.geo.url}") String geoUrl) {
-        this.BASE_URL = baseUrl;
-        this.GEO_URL = geoUrl;
-    }
+
     @Bean("weatherClient")
-    public OpenWeatherApi getFeignClient(ObjectMapper objectMapper) {
+    public OpenWeatherFeignClient getFeignClient(
+            @Qualifier("webClientObjectMapper") ObjectMapper objectMapper,
+            WebClientConfigurationProperties properties) {
         return Feign.builder()
                 .decoder(new JacksonDecoder(objectMapper))
                 .encoder(new JacksonEncoder(objectMapper))
-                .target(OpenWeatherApi.class, BASE_URL);
+                .target(OpenWeatherFeignClient.class, properties.getBaseUrl().toString());
     }
-    @Bean("locationClient")
-    public OpenWeatherApi getFeignClientForLocation() {
-        return Feign.builder()
-                .decoder(new JacksonDecoder())
-                .target(OpenWeatherApi.class, GEO_URL);
 
+    @Bean("locationClient")
+    public OpenWeatherFeignClient getFeignClientForLocation(
+            @Qualifier("webClientObjectMapper") ObjectMapper objectMapper,
+                    WebClientConfigurationProperties properties)
+    {
+        return Feign.builder()
+                .decoder(new JacksonDecoder(objectMapper))
+                .encoder(new JacksonEncoder(objectMapper))
+                .target(OpenWeatherFeignClient.class, properties.getBaseLocationUrl().toString());
+    }
+    @Bean
+    @Qualifier("webClientObjectMapper")
+    public ObjectMapper webClientObjectMapper() {
+        return new ObjectMapper()
+                .registerModules(new JavaTimeModule(), new Jdk8Module())
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }
