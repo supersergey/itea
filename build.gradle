@@ -12,6 +12,10 @@ java {
 	sourceCompatibility = '17'
 }
 
+jar {
+	enabled = false
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -55,6 +59,16 @@ dependencies {
 
 	testImplementation 'com.github.database-rider:rider-spring:1.40.0'
 	testImplementation 'com.github.database-rider:rider-junit5:1.40.0'
+}
+
+tasks.register('dockerBuild') {
+	group = 'docker'
+	dependsOn 'build'
+	doLast {
+		exec {
+			commandLine 'sh', 'build-docker.sh'
+		}
+	}
 }
 
 tasks.named('test') {
