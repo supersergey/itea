@@ -20,8 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        classes = {UserController.class}
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
 @Transactional
 @ExtendWith(MockitoExtension.class)

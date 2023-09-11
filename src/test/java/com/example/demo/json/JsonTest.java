@@ -2,12 +2,14 @@ package com.example.demo.json;
 
 import com.example.demo.controller.dto.User;
 import com.example.demo.webclient.WebClientConfig;
+import com.example.demo.webclient.WebClientConfigurationProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
@@ -15,9 +17,10 @@ import java.time.LocalDateTime;
 
 @SpringBootTest(classes = {ObjectMapper.class})
 @Import(WebClientConfig.class)
-public class JsonTest {
+@EnableConfigurationProperties(WebClientConfigurationProperties.class)
+class JsonTest {
     @Autowired
-    @Qualifier("myObjectMapper")
+    @Qualifier("webClientObjectMapper")
     ObjectMapper objectMapper;
 
     @Test

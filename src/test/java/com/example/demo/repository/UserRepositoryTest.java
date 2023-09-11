@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -120,6 +121,7 @@ class UserRepositoryTest {
     }
 
     @Test
+    @Transactional
     void shouldFindUserByPostTitle() {
         var userWithPostTitle = userRepository.save(
                 new User(
