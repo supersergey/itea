@@ -21,6 +21,26 @@ repositories {
 	mavenCentral()
 }
 
+tasks.register('dockerBuild') {
+	group = 'docker'
+//	dependsOn 'build'
+	doLast {
+		exec {
+			commandLine 'sh', 'build-docker.sh'
+		}
+	}
+}
+
+tasks.register('dockerRun') {
+	group = 'docker'
+	dependsOn 'dockerBuild'
+	doLast {
+		exec {
+			commandLine 'docker-compose', 'up', '-d'
+		}
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-devtools'
