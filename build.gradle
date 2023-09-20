@@ -23,12 +23,15 @@ configurations {
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
-def testContainersVersion = '1.19.0';
+def testContainersVersion = '1.19.0'
 
 dependencies {
+	implementation project(':autoconfigure-lib')
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
@@ -39,6 +42,8 @@ dependencies {
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.0'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+//	implementation 'com.itea.demo:autoconfigure.lib:0.0.1-SNAPSHOT'
 
 //	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4'
 

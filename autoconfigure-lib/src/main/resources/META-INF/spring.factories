@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.itea.demo.autoconfigure.com.itea.demo.LocalTimeProviderAutoConfiguration
