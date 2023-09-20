@@ -1,22 +1,19 @@
 package com.example.demo.repository;
 
+import com.example.demo.annotations.DBTest;
 import com.example.demo.repository.model.PostEntity;
 import com.example.demo.repository.model.User;
 import com.example.demo.repository.model.UserRole;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
-import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +26,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@DBRider
-@DBUnit(caseSensitiveTableNames = true, schema = "public")
+@DBTest
 class UserRepositoryTest {
 
     @Autowired
@@ -105,7 +99,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    @Disabled
+    @Disabled("fails")
     void shouldAddPostsToUser() {
         var saved = userDataFactory.addNewUser( null, "Taras", "Petrenko", UserRole.ADMIN);
         postRepository.saveAll(
